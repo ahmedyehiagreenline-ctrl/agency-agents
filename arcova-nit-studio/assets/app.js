@@ -16,6 +16,21 @@
     set: function (k, v) { try { sessionStorage.setItem(k, JSON.stringify(v)); } catch (e) { /* storage blocked */ } }
   };
 
+  /* ---------- Catalog lookups ---------- */
+  var CATS = C.catalog;
+  var EST_CATS = CATS.filter(function (c) { return c.estimator; });
+  var OTHER_CATS = CATS.filter(function (c) { return !c.estimator; });
+  var ADDONS = [];
+  C.addOnGroups.forEach(function (g) { g.items.forEach(function (a) { ADDONS.push(a); }); });
+  var byId = function (list, id) { return list.find(function (x) { return x.id === id; }); };
+  var catOf = function (id) { return byId(CATS, id); };
+  var isPriced = function (a) { return a.fixed > 0 || a.perM2 > 0; };
+  function fromPrice(cat) {
+    var mins = cat.types.filter(function (t) { return !t.quote && t.min; }).map(function (t) { return t.min; });
+    return mins.length ? Math.min.apply(null, mins) : 0;
+  }
+  function projectLabel(cat, type) { return cat.name + ' — ' + type.name; }
+
   /* ---------- Attribution: keep UTM / click IDs for the whole visit ---------- */
   var ATTR_KEYS = ['utm_source', 'utm_medium', 'utm_campaign', 'utm_content', 'utm_term', 'fbclid', 'gclid', 'ttclid'];
   var attribution = (function () {
@@ -69,6 +84,11 @@
 
   /* ---------- Static content from config ---------- */
   $('#year').textContent = new Date().getFullYear();
+  $('#footTag').textContent = C.brand.tagline || '';
+  if (C.brand.logo) {
+    var li = $('#logoImg'); li.src = C.brand.logo; li.hidden = false;
+    $('.logo-mark').hidden = true; $('.logo-type').hidden = true;
+  }
   var phoneEl = $('.js-phone');
   phoneEl.textContent = C.brand.phone;
   phoneEl.href = 'tel:' + C.brand.phone.replace(/\s/g, '');
@@ -77,34 +97,55 @@
   $('#stats').innerHTML = (C.stats || []).filter(function (s) { return s.value; })
     .map(function (s) { return '<li><b>' + esc(s.value) + '</b><span>' + esc(s.label) + '</span></li>'; }).join('');
 
-  var social = [['instagram', 'Instagram'], ['facebook', 'Facebook'], ['tiktok', 'TikTok']]
+  var social = [['facebook', 'Facebook'], ['instagram', 'Instagram'], ['tiktok', 'TikTok']]
     .filter(function (p) { return C.brand[p[0]]; })
     .map(function (p) { return '<a href="' + esc(C.brand[p[0]]) + '" target="_blank" rel="noopener">' + p[1] + '</a>'; });
   $('#footLinks').innerHTML = social.join('') + '<a href="#book">احجز معاينة</a>';
 
-  // Services
-  $('#servicesList').innerHTML = C.services.map(function (s, i) {
-    return '<article class="svc">' +
-      '<span class="svc-code">A-0' + (i + 1) + '</span>' +
-      '<h3>' + esc(s.name) + '</h3>' +
-      '<span class="short">' + esc(s.short) + '</span>' +
-      '<p class="desc">' + esc(s.desc) + '</p>' +
-      '<div class="from"><small>يبدأ من</small><b>' + fmt(s.min) + '</b><small>ج / ' + esc(s.unit) + '</small></div>' +
-      '<a class="go" href="#estimate" data-svc="' + s.id + '">احسب تكلفتك ←</a>' +
-      '</article>';
-  }).join('');
+  function typePrice(t) { return t.quote ? 'بعد التوصيف' : 'من ' + fmt(t.min) + ' ج/م²'; }
 
-  // Tiers (pricing section): per-m² start price of each service at that tier
-  $('#tiers').innerHTML = C.tiers.map(function (t) {
-    var rows = C.services.map(function (s) {
-      return '<tr><td>' + esc(s.name) + '</td><td>' + fmt(round500(s.min * t.factor)) + ' +</td></tr>';
+  function renderServices() {
+    $('#servicesList').innerHTML = EST_CATS.map(function (c, i) {
+      var from = fromPrice(c);
+      return '<article class="svc">' +
+        '<div class="svc-top"><span class="svc-code">P-0' + (i + 1) + '</span>' + (c.warranty ? '<span class="badge">' + esc(c.warranty) + '</span>' : '') + '</div>' +
+        '<h3>' + esc(c.name) + '</h3>' +
+        '<span class="short">' + esc(c.short) + '</span>' +
+        '<p class="desc">' + esc(c.desc) + '</p>' +
+        '<ul class="svc-types">' + c.types.map(function (t) {
+          return '<li><span>' + esc(t.name) + '</span><b>' + esc(t.quote ? 'بعد التوصيف' : fmt(t.min) + ' +') + '</b></li>';
+        }).join('') + '</ul>' +
+        '<div class="from"><small>يبدأ من</small><b>' + fmt(from) + '</b><small>ج / م²</small></div>' +
+        '<a class="go" href="#estimate" data-cat="' + c.id + '">احسب تكلفتك ←</a>' +
+        '</article>';
     }).join('');
-    return '<div class="tier' + (t.factor === 1 ? ' pop' : '') + '">' +
-      '<div class="tier-top"><h3>' + esc(t.name) + '</h3>' + (t.factor === 1 ? '<span class="badge">الأكثر طلباً</span>' : '') + '</div>' +
-      '<p class="note">' + esc(t.note) + '</p>' +
-      '<table><tbody>' + rows + '</tbody></table>' +
-      '<p class="hint">ج / م² — توريد وتركيب</p></div>';
-  }).join('');
+
+    $('#extrasList').innerHTML = ADDONS.map(function (a) { return '<li>' + esc(a.name) + '</li>'; }).join('');
+
+    $('#otherList').innerHTML = OTHER_CATS.map(function (c) {
+      return '<article class="other">' +
+        '<h4>' + esc(c.name) + '</h4><p>' + esc(c.desc) + '</p>' +
+        '<a class="go" href="#book" data-project="' + esc(c.name) + '">اطلب عرض سعر ←</a></article>';
+    }).join('');
+  }
+
+  function renderPriceTables() {
+    $('#priceTables').innerHTML = EST_CATS.map(function (c, i) {
+      var rows = c.types.map(function (t) {
+        return '<tr><td>' + esc(t.name) + '</td><td>' + esc(t.quote ? 'بعد التوصيف' : fmt(t.min) + ' – ' + fmt(t.max)) + '</td></tr>';
+      }).join('');
+      var opts = c.options.map(function (o) {
+        var pct = Math.round((o.factor - 1) * 100);
+        return '<li>' + esc(o.name) + (pct > 0 ? ' <b>+' + pct + '%</b>' : '') + '</li>';
+      }).join('');
+      return '<div class="tier' + (i === 0 ? ' pop' : '') + '">' +
+        '<div class="tier-top"><h3>' + esc(c.name) + '</h3>' + (c.warranty ? '<span class="badge">' + esc(c.warranty) + '</span>' : '') + '</div>' +
+        '<p class="note">' + esc(c.short) + '</p>' +
+        '<table><tbody>' + rows + '</tbody></table>' +
+        '<p class="opt-h">' + esc(c.optionsLabel) + '</p><ul class="opts">' + opts + '</ul>' +
+        '</div>';
+    }).join('');
+  }
 
   // Testimonials (only real ones from config)
   if (C.testimonials && C.testimonials.length) {
@@ -115,15 +156,30 @@
   }
 
   /* ---------- Gallery + lightbox ---------- */
-  var CAT = { wood: 'خشب', metal: 'معدن', aluminum: 'ألومنيوم', glass: 'زجاج' };
   var visible = [];
+  var galleryCats = CATS.filter(function (c) { return C.gallery.some(function (g) { return g.cat === c.id; }); });
+  if (galleryCats.length > 1) {
+    $('#filters').innerHTML = '<button type="button" role="tab" aria-selected="true" data-cat="all">الكل</button>' +
+      galleryCats.map(function (c) { return '<button type="button" role="tab" aria-selected="false" data-cat="' + c.id + '">' + esc(c.name) + '</button>'; }).join('');
+  } else {
+    $('#filters').hidden = true;
+  }
   function renderGallery(cat) {
     visible = C.gallery.filter(function (g) { return cat === 'all' || g.cat === cat; });
+    // First photo is large; the rest run in rows of three, and a short last row stretches to fill
+    var n = visible.length, tail = n > 3 ? (n - 3) % 3 : 0;
+    var sizeOf = function (i) {
+      if (i === 0 && n > 2) return ' wide';
+      if (tail === 2 && i >= n - 2) return ' half';
+      if (tail === 1 && i === n - 1) return ' full';
+      return '';
+    };
     $('#gallery').innerHTML = visible.map(function (g, i) {
-      return '<button type="button" class="g-item' + (i % 5 === 0 ? ' wide' : '') + '" data-i="' + i + '">' +
+      var c = catOf(g.cat);
+      return '<button type="button" class="g-item' + sizeOf(i) + '" data-i="' + i + '">' +
         '<img src="' + esc(g.src) + '" alt="' + esc(g.title) + '" loading="lazy">' +
-        '<span class="g-tag">' + (g.placeholder ? 'صورة توضيحية' : esc(CAT[g.cat] || '')) + '</span>' +
-        '<span class="g-cap"><b>' + esc(g.title) + '</b>' + (g.place && !g.placeholder ? '<small>' + esc(g.place) + '</small>' : '') + '</span>' +
+        '<span class="g-tag' + (g.kind === 'render' ? ' g-render' : '') + '">' + (g.kind === 'render' ? 'تصميم 3D' : esc(c ? c.name : '')) + '</span>' +
+        '<span class="g-cap"><b>' + esc(g.title) + '</b>' + (g.place ? '<small>' + esc(g.place) + '</small>' : '') + '</span>' +
         '</button>';
     }).join('');
     $('#galleryEmpty').hidden = visible.length > 0;
@@ -140,7 +196,7 @@
     lbIdx = (i + visible.length) % visible.length;
     var g = visible[lbIdx];
     $('#lbImg').src = g.src; $('#lbImg').alt = g.title;
-    $('#lbCap').textContent = g.title + (g.place && !g.placeholder ? ' — ' + g.place : '');
+    $('#lbCap').textContent = g.title + (g.place ? ' — ' + g.place : '') + (g.kind === 'render' ? ' (تصميم 3D)' : '');
   }
   $('#gallery').addEventListener('click', function (e) {
     var b = e.target.closest('.g-item'); if (!b) return;
@@ -160,57 +216,77 @@
   });
 
   /* ---------- Estimator ---------- */
-  var state = { svc: C.services[0].id, len: 5, wid: 4, tier: 'signature', addOns: ['lighting'] };
+  var state = { cat: EST_CATS[0].id, type: EST_CATS[0].types[0].id, opt: EST_CATS[0].options[0].id, len: 5, wid: 4, addOns: ['lighting'] };
 
-  $('#estService').innerHTML = C.services.map(function (s) {
-    return '<label class="chip"><input type="radio" name="svc" value="' + s.id + '"><span>' + esc(s.name) + '<small>' + esc(s.short) + '</small></span></label>';
+  $('#estCat').innerHTML = EST_CATS.map(function (c) {
+    return '<label class="chip chip-cat"><input type="radio" name="cat" value="' + c.id + '"><span>' + esc(c.name) + '</span></label>';
   }).join('');
-  $('#estTier').innerHTML = C.tiers.map(function (t) {
-    return '<label class="chip"><input type="radio" name="tier" value="' + t.id + '"><span>' + esc(t.name) + '<small>' + esc(t.note) + '</small></span></label>';
+  $('#estAddons').innerHTML = C.addOnGroups.map(function (g) {
+    return '<div class="addon-group"><p class="addon-h">' + esc(g.name) + '</p><div class="addons">' + g.items.map(function (a) {
+      var price = a.perM2 ? '+' + fmt(a.perM2) + ' / م²' : a.fixed ? '+' + fmt(a.fixed) : 'حسب الاختيار';
+      return '<label class="addon"><input type="checkbox" name="addon" value="' + a.id + '"><span>' + esc(a.name) + '</span><b data-addon-price="' + a.id + '">' + esc(price) + '</b></label>';
+    }).join('') + '</div></div>';
   }).join('');
-  $('#estAddons').innerHTML = C.addOns.map(function (a) {
-    var price = a.label ? a.label : a.perM2 ? '+' + fmt(a.perM2) + ' / م²' : '+' + fmt(a.fixed);
-    return '<label class="addon"><input type="checkbox" name="addon" value="' + a.id + '"><span>' + esc(a.name) + '</span><b>' + esc(price) + '</b></label>';
-  }).join('');
-  $('#fService').innerHTML = C.services.map(function (s) { return '<option value="' + esc(s.name) + '">' + esc(s.name) + '</option>'; }).join('') +
-    '<option value="أخرى / أكثر من خدمة">أخرى / أكثر من خدمة</option>';
+
+  function renderLeadOptions() {
+    var sel = $('#fService'), cur = sel.value;
+    sel.innerHTML = EST_CATS.map(function (c) {
+      return '<optgroup label="' + esc(c.name) + '">' + c.types.map(function (t) {
+        var v = projectLabel(c, t);
+        return '<option value="' + esc(v) + '">' + esc(t.name) + '</option>';
+      }).join('') + '</optgroup>';
+    }).join('') +
+      '<optgroup label="خدمات تانية">' + OTHER_CATS.map(function (c) { return '<option value="' + esc(c.name) + '">' + esc(c.name) + '</option>'; }).join('') +
+      '<option value="أكتر من خدمة / أخرى">أكتر من خدمة / أخرى</option></optgroup>';
+    if (cur) sel.value = cur;
+  }
+
+  function renderTypeChips() {
+    var c = catOf(state.cat);
+    $('#estType').innerHTML = c.types.map(function (t) {
+      return '<label class="chip"><input type="radio" name="type" value="' + t.id + '"><span>' + esc(t.name) + '<small>' + esc(t.note || '') + '</small></span></label>';
+    }).join('');
+    $('#estOpt').innerHTML = c.options.map(function (o) {
+      return '<label class="chip"><input type="radio" name="opt" value="' + o.id + '"><span>' + esc(o.name) + '<small>' + esc(o.note || '') + '</small></span></label>';
+    }).join('');
+    $('#estOptLabel').textContent = c.optionsLabel;
+    $('#sumOptLabel').textContent = c.optionsLabel;
+  }
 
   function clampSize(v) { v = parseFloat(v); if (!isFinite(v)) v = 1; return Math.min(30, Math.max(1, Math.round(v * 2) / 2)); }
 
   function calc() {
-    var s = C.services.find(function (x) { return x.id === state.svc; });
-    var t = C.tiers.find(function (x) { return x.id === state.tier; });
+    var c = catOf(state.cat);
+    var t = byId(c.types, state.type) || c.types[0];
+    var o = byId(c.options, state.opt) || c.options[0];
     var area = state.len * state.wid;
-    var extras = state.addOns.reduce(function (sum, id) {
-      var a = C.addOns.find(function (x) { return x.id === id; });
-      if (!a) return sum;
-      // side glass is priced on the perimeter elevation (perimeter × 2.5 m average height)
-      var qty = a.perM2 ? (state.len + state.wid) * 2.5 : 1;
-      return sum + (a.perM2 ? a.perM2 * qty : a.fixed);
-    }, 0);
-    var lo = Math.max(s.minTotal, area * s.min * t.factor) + extras;
-    var hi = Math.max(s.minTotal * 1.15, area * s.max * t.factor) + extras;
-    return { s: s, t: t, area: area, lo: round500(lo), hi: round500(hi) };
+    var picked = state.addOns.map(function (id) { return byId(ADDONS, id); }).filter(Boolean);
+    var extras = picked.reduce(function (sum, a) { return sum + (a.perM2 ? a.perM2 * area : a.fixed || 0); }, 0);
+    var r = { c: c, t: t, o: o, area: area, quote: !!t.quote, picked: picked,
+      unpriced: picked.filter(function (a) { return !isPriced(a); }).map(function (a) { return a.name; }) };
+    if (!r.quote) {
+      r.lo = round500(Math.max(t.minTotal || 0, area * t.min * o.factor) + extras);
+      r.hi = round500(Math.max((t.minTotal || 0) * 1.15, area * t.max * o.factor) + extras);
+    }
+    return r;
   }
 
-  function drawPlan(len, wid, svcId) {
+  function drawPlan(len, wid, t) {
     var W = 320, H = 240, pad = 44;
     var scale = Math.min((W - pad * 2) / len, (H - pad * 2) / wid);
     var w = len * scale, h = wid * scale, x = (W - w) / 2 + 10, y = (H - h) / 2 - 8;
     var ink = 'rgba(243,245,240,.9)', faint = 'rgba(243,245,240,.35)', accent = '#d29a61';
-    var out = '';
-    out += '<rect x="' + x + '" y="' + y + '" width="' + w + '" height="' + h + '" fill="rgba(243,245,240,.04)" stroke="' + ink + '" stroke-width="1.5"/>';
-    // Slats / panels depending on service
-    var isGlass = svcId === 'glass-room' || svcId === 'aluminum';
-    var gap = isGlass ? Math.max(w / Math.ceil(len / 1.2), 18) : Math.max(scale * 0.25, 6);
-    for (var sx = x + gap; sx < x + w - 2; sx += gap) {
-      out += '<line x1="' + sx + '" y1="' + y + '" x2="' + sx + '" y2="' + (y + h) + '" stroke="' + faint + '" stroke-width="' + (isGlass ? 1 : 1.2) + '"/>';
+    var enclosed = !!t.quote, solid = /solid|sandwich/.test(t.id);
+    var out = '<rect x="' + x + '" y="' + y + '" width="' + w + '" height="' + h + '" fill="' + (solid ? 'rgba(243,245,240,.14)' : 'rgba(243,245,240,.04)') + '" stroke="' + ink + '" stroke-width="' + (enclosed ? 3 : 1.5) + '"/>';
+    if (!solid) {
+      var gap = enclosed ? Math.max(w / Math.ceil(len / 1.2), 18) : Math.max(scale * 0.25, 6);
+      for (var sx = x + gap; sx < x + w - 2; sx += gap) {
+        out += '<line x1="' + sx + '" y1="' + y + '" x2="' + sx + '" y2="' + (y + h) + '" stroke="' + faint + '" stroke-width="1.1"/>';
+      }
     }
-    // Posts at corners (and mid-span above 5 m)
     var posts = [[x, y], [x + w, y], [x, y + h], [x + w, y + h]];
-    if (len > 5) { posts.push([x + w / 2, y], [x + w / 2, y + h]); }
+    if (len > 5) posts.push([x + w / 2, y], [x + w / 2, y + h]);
     posts.forEach(function (p) { out += '<rect x="' + (p[0] - 4) + '" y="' + (p[1] - 4) + '" width="8" height="8" fill="' + accent + '"/>'; });
-    // Dimension lines
     var dy = y + h + 20, dx = x - 20;
     out += '<g stroke="' + faint + '" stroke-width="1">' +
       '<line x1="' + x + '" y1="' + dy + '" x2="' + (x + w) + '" y2="' + dy + '"/>' +
@@ -230,38 +306,69 @@
   var viewedEstimator = false;
   function update() {
     var r = calc();
-    $('#sumService').textContent = r.s.name;
+    state.result = r;
+    $('#sumService').textContent = r.c.name + ' — ' + r.t.name;
     $('#sumArea').textContent = state.len + ' × ' + state.wid + ' م = ' + r.area.toFixed(1) + ' م²';
-    $('#sumTier').textContent = r.t.name;
-    $('#sumPrice').textContent = fmt(r.lo) + ' – ' + fmt(r.hi);
-    drawPlan(state.len, state.wid, state.svc);
-    var addNames = state.addOns.map(function (id) { var a = C.addOns.find(function (x) { return x.id === id; }); return a ? a.name : ''; }).filter(Boolean);
-    estimateText = fmt(r.lo) + ' – ' + fmt(r.hi) + ' ج.م';
-    $('#leadEstText').textContent = r.s.name + ' · ' + state.len + '×' + state.wid + ' م · ' + estimateText;
-    $('#fService').value = r.s.name;
-    state.result = r; state.addNames = addNames;
-    store.set('arcova_est', { svc: state.svc, len: state.len, wid: state.wid, tier: state.tier, addOns: state.addOns });
+    $('#sumOpt').textContent = r.o.name;
+    $('#sumQuoteRow').hidden = !r.unpriced.length;
+    $('#sumQuote').textContent = r.unpriced.join('، ');
+    if (r.quote) {
+      $('#sumPrice').textContent = 'بعد التوصيف';
+      $('#sumPriceNote').textContent = 'احكيلنا تفاصيل المكان وهنبعتلك عرض سعر مفصّل';
+      estimateText = 'بعد التوصيف';
+    } else {
+      $('#sumPrice').textContent = fmt(r.lo) + ' – ' + fmt(r.hi);
+      $('#sumPriceNote').textContent = 'جنيه مصري · توريد وتركيب' + (r.unpriced.length ? ' · + بنود حسب الاختيار' : '');
+      estimateText = fmt(r.lo) + ' – ' + fmt(r.hi) + ' ج.م' + (r.unpriced.length ? ' + بنود حسب الاختيار' : '');
+    }
+    $('#estToBook').textContent = r.quote ? 'احكيلنا التفاصيل واحجز معاينة' : 'احجز معاينة بالتقدير ده';
+    drawPlan(state.len, state.wid, r.t);
+    $('#fService').value = projectLabel(r.c, r.t);
+    syncLeadEst();
+    store.set('arcova_est', { cat: state.cat, type: state.type, opt: state.opt, len: state.len, wid: state.wid, addOns: state.addOns });
+  }
+
+  // The estimate travels with the lead only while the form's project matches the estimator
+  function estApplies() { var r = state.result; return !!r && $('#fService').value === projectLabel(r.c, r.t); }
+  function syncLeadEst() {
+    var r = state.result, on = estApplies();
+    $('#leadEst').hidden = !on;
+    if (on) $('#leadEstText').textContent = r.t.name + ' · ' + r.o.name + ' · ' + state.len + '×' + state.wid + ' م · ' + estimateText;
   }
 
   function syncInputs() {
-    $$('input[name="svc"]').forEach(function (i) { i.checked = i.value === state.svc; });
-    $$('input[name="tier"]').forEach(function (i) { i.checked = i.value === state.tier; });
+    $$('input[name="cat"]').forEach(function (i) { i.checked = i.value === state.cat; });
+    $$('input[name="type"]').forEach(function (i) { i.checked = i.value === state.type; });
+    $$('input[name="opt"]').forEach(function (i) { i.checked = i.value === state.opt; });
     $$('input[name="addon"]').forEach(function (i) { i.checked = state.addOns.indexOf(i.value) > -1; });
     $('#estLen').value = state.len; $('#estWid').value = state.wid;
   }
 
+  function setCat(id) {
+    var c = catOf(id); if (!c || !c.estimator) return;
+    state.cat = id;
+    if (!byId(c.types, state.type)) state.type = c.types[0].id;
+    if (!byId(c.options, state.opt)) state.opt = c.options[0].id;
+    renderTypeChips();
+  }
+
+  renderServices(); renderPriceTables(); renderLeadOptions();
   var saved = store.get('arcova_est');
-  if (saved && C.services.some(function (s) { return s.id === saved.svc; })) Object.assign(state, saved);
-  syncInputs(); update();
+  if (saved && catOf(saved.cat) && catOf(saved.cat).estimator) {
+    Object.assign(state, saved);
+    state.addOns = (saved.addOns || []).filter(function (id) { return byId(ADDONS, id); });
+  }
+  setCat(state.cat); syncInputs(); update();
 
   $('#estForm').addEventListener('change', function (e) {
     var t = e.target;
-    if (t.name === 'svc') state.svc = t.value;
-    if (t.name === 'tier') state.tier = t.value;
+    if (t.name === 'cat') { setCat(t.value); }
+    if (t.name === 'type') state.type = t.value;
+    if (t.name === 'opt') state.opt = t.value;
     if (t.name === 'addon') state.addOns = $$('input[name="addon"]:checked').map(function (i) { return i.value; });
-    if (t.id === 'estLen') { state.len = clampSize(t.value); t.value = state.len; }
-    if (t.id === 'estWid') { state.wid = clampSize(t.value); t.value = state.wid; }
-    update();
+    if (t.id === 'estLen') state.len = clampSize(t.value);
+    if (t.id === 'estWid') state.wid = clampSize(t.value);
+    syncInputs(); update();
     if (!viewedEstimator) { viewedEstimator = true; track('ViewContent', { content_name: 'estimator' }); }
   });
   $('#estForm').addEventListener('input', function (e) {
@@ -278,18 +385,51 @@
       syncInputs(); update();
     });
   });
-  // "احسب تكلفتك" on a service card preselects it
+  // Service cards preselect the estimator category, "other services" preselect the form
   $('#servicesList').addEventListener('click', function (e) {
-    var a = e.target.closest('[data-svc]'); if (!a) return;
-    state.svc = a.dataset.svc; syncInputs(); update();
+    var a = e.target.closest('[data-cat]'); if (!a) return;
+    setCat(a.dataset.cat); syncInputs(); update();
   });
+  $('#otherList').addEventListener('click', function (e) {
+    var a = e.target.closest('[data-project]'); if (!a) return;
+    $('#fService').value = a.dataset.project; syncLeadEst();
+  });
+  $('#fService').addEventListener('change', syncLeadEst);
+
+  /* ---------- Live prices from the Google Sheet "Prices" tab ---------- */
+  function applyPrices(map) {
+    var fields = ['min', 'max', 'minTotal', 'fixed', 'perM2', 'factor'];
+    var apply = function (item) {
+      var p = map[item.id]; if (!p) return;
+      fields.forEach(function (f) { var v = parseFloat(p[f]); if (isFinite(v) && v >= 0) item[f] = v; });
+    };
+    EST_CATS.forEach(function (c) { c.types.forEach(apply); c.options.forEach(apply); });
+    ADDONS.forEach(apply);
+    renderServices(); renderPriceTables();
+    ADDONS.forEach(function (a) {
+      var el = $('[data-addon-price="' + a.id + '"]');
+      if (el) el.textContent = a.perM2 ? '+' + fmt(a.perM2) + ' / م²' : a.fixed ? '+' + fmt(a.fixed) : 'حسب الاختيار';
+    });
+    update();
+  }
+  if (C.sheetWebhookUrl) {
+    var cachedPrices = store.get('arcova_prices');
+    if (cachedPrices) applyPrices(cachedPrices);
+    var ctrl = window.AbortController ? new AbortController() : null;
+    var timer = setTimeout(function () { if (ctrl) ctrl.abort(); }, 6000);
+    fetch(C.sheetWebhookUrl + (C.sheetWebhookUrl.indexOf('?') > -1 ? '&' : '?') + 'prices=1', ctrl ? { signal: ctrl.signal } : {})
+      .then(function (res) { return res.json(); })
+      .then(function (j) { clearTimeout(timer); if (j && j.ok && j.prices) { store.set('arcova_prices', j.prices); applyPrices(j.prices); } })
+      .catch(function () { /* keep config prices */ });
+  }
 
   /* ---------- WhatsApp links ---------- */
   function waUrl(text) { return 'https://wa.me/' + C.brand.whatsapp + '?text=' + encodeURIComponent(text); }
   function estimateSummary() {
     var r = state.result;
-    return r.s.name + ' بمقاس ' + state.len + '×' + state.wid + ' م (' + r.area.toFixed(1) + ' م²)، تشطيب ' + r.t.name +
-      (state.addNames.length ? '، إضافات: ' + state.addNames.join('، ') : '') + '. التقدير: ' + estimateText + '.';
+    var addNames = r.picked.map(function (a) { return a.name; });
+    return r.c.name + ' (' + r.t.name + ')، ' + r.o.name + '، مقاس ' + state.len + '×' + state.wid + ' م (' + r.area.toFixed(1) + ' م²)' +
+      (addNames.length ? '، إضافات: ' + addNames.join('، ') : '') + '. التقدير: ' + estimateText + '.';
   }
   function bindWa(sel, textFn) {
     $$(sel).forEach(function (a) {
@@ -301,7 +441,7 @@
       a.addEventListener('click', function () { refresh(); track('Contact', { method: 'whatsapp', placement: a.dataset.track || '' }); });
     });
   }
-  bindWa('.js-wa', function () { return 'أهلاً Arcova، عايز أستفسر عن مشروع ' + state.result.s.name + '.'; });
+  bindWa('.js-wa', function () { return 'أهلاً Arcova، عايز أستفسر عن ' + state.result.c.name + '.'; });
   bindWa('.js-wa-est', function () { return 'أهلاً Arcova، حسبت تكلفة مشروعي على الموقع: ' + estimateSummary() + ' عايز أحجز معاينة.'; });
   var waThanksText = null; // set when the sheet is unreachable, so the lead goes out on WhatsApp instead
   bindWa('.js-wa-thanks', function () { return waThanksText || 'أهلاً Arcova، لسه باعت طلب معاينة باسم ' + ($('#fName').value || '') + '. دي صور المكان:'; });
@@ -351,17 +491,17 @@
       return;
     }
 
-    var r = state.result;
+    var r = state.result, withEst = estApplies();
     var payload = {
       leadId: 'ARC-' + Date.now().toString(36).toUpperCase(),
       name: name,
       phone: phone,
       location: area,
       project: $('#fService').value,
-      size: state.len + ' × ' + state.wid + ' م (' + r.area.toFixed(1) + ' م²)',
-      estimate: estimateText,
-      addOns: state.addNames.join('، '),
-      tier: r.t.name,
+      size: withEst ? state.len + ' × ' + state.wid + ' م (' + r.area.toFixed(1) + ' م²)' : '',
+      estimate: withEst ? estimateText : '',
+      addOns: withEst ? r.picked.map(function (a) { return a.name; }).join('، ') : '',
+      material: withEst ? r.o.name : '',
       contactTime: $('#fTime').value,
       notes: $('#fNotes').value.trim(),
       utmSource: attribution.utm_source || (attribution.referrer ? 'referral' : 'direct'),
@@ -385,18 +525,18 @@
         .then(function (res) { return res.json(); })
         .then(function (j) { if (!j.ok) throw new Error(j.error || 'sheet-error'); });
     }).then(function () {
-      done(payload);
+      done(payload, null, withEst);
     }).catch(function (err) {
       // Fallback: never lose the lead — hand it to WhatsApp with all details
-      var text = 'أهلاً Arcova، أنا ' + payload.name + '. عايز أحجز معاينة: ' + estimateSummary() +
+      var text = 'أهلاً Arcova، أنا ' + payload.name + '. عايز أحجز معاينة: ' + (withEst ? estimateSummary() : payload.project + '.') +
         ' المنطقة: ' + payload.location + '. موبايل: ' + payload.phone + (payload.notes ? '. ملاحظات: ' + payload.notes : '') + ' [' + payload.leadId + ']';
       if (err && err.message !== 'no-webhook' && window.console) console.warn('Arcova lead webhook failed:', err);
-      done(payload, text);
+      done(payload, text, withEst);
     });
   });
 
-  function done(p, waFallback) {
-    track('Lead', { value: state.result.lo, currency: 'EGP', content_name: p.project });
+  function done(p, waFallback, withEst) {
+    track('Lead', { value: withEst && state.result.lo ? state.result.lo : 0, currency: 'EGP', content_name: p.project });
     store.set('arcova_lead', { name: p.name, id: p.leadId });
     form.hidden = true;
     $('#thanksName').textContent = p.name.split(' ')[0];

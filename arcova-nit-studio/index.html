@@ -22,6 +22,7 @@
   <header class="site-head">
     <div class="wrap head-row">
       <a class="logo" href="#top" aria-label="Arcova NIT Studio">
+        <img class="logo-img" id="logoImg" alt="Arcova NIT Studio" hidden>
         <svg class="logo-mark" viewBox="0 0 40 40" aria-hidden="true"><path d="M4 34 L20 6 L36 34" fill="none" stroke="currentColor" stroke-width="3"/><path d="M10 34 V22 H30 V34" fill="none" stroke="currentColor" stroke-width="2"/><path d="M13 22 V34 M17 22 V34 M21 22 V34 M25 22 V34" stroke="currentColor" stroke-width="1"/></svg>
         <span class="logo-type"><b>ARCOVA</b><small>NIT STUDIO</small></span>
       </a>
@@ -41,9 +42,9 @@
     <section class="hero" id="top">
       <div class="wrap hero-grid">
         <div class="hero-copy">
-          <p class="eyebrow">برجولات · زجاج · ألومنيوم</p>
+          <p class="eyebrow">برجولات · زجاج · ألومنيوم · تشطيبات</p>
           <h1>مساحتك الخارجية،<br><span>متصممة بالسنتيمتر.</span></h1>
-          <p class="lead">من برجولة الخشب في الجنينة لسقف الزجاج على الرووف، بنقيس ونصمم وننفّذ بفريقنا. احسب التكلفة التقريبية دلوقتي، والمعاينة علينا.</p>
+          <p class="lead">برجولات خشب وحديد وألومنيوم للجنينة والرووف، وأعمال زجاج وألومنيوم وتشطيبات كاملة. بنقيس ونصمم وننفّذ بفريقنا. احسب التكلفة التقريبية دلوقتي، والمعاينة علينا.</p>
           <div class="cta-row">
             <a class="btn" href="#estimate" data-track="hero_estimate">احسب تكلفة مشروعك</a>
             <a class="btn btn-ghost js-wa" href="#" data-track="hero_whatsapp">كلّمنا واتساب</a>
@@ -51,7 +52,7 @@
           <ul class="stats" id="stats"></ul>
         </div>
         <figure class="hero-media">
-          <img src="images/placeholder/facade-night.jpg" alt="تراس مغطى بتكسية خشب وواجهة زجاج مضاءة ليلاً" width="1400" height="933" fetchpriority="high">
+          <img src="images/work/wood-pergola-rooftop.jpg" alt="برجولة خشب على رووف بجوانب شرائح وإضاءة دافئة وقت الغروب" width="1195" height="896" fetchpriority="high">
           <div class="dim dim-h" aria-hidden="true"><span>6.00 م</span></div>
           <div class="dim dim-v" aria-hidden="true"><span>4.50 م</span></div>
           <figcaption>معاينة وقياس بالليزر قبل أي عرض سعر</figcaption>
@@ -61,7 +62,7 @@
         <div><strong>معاينة مجانية</strong><span>في القاهرة الكبرى</span></div>
         <div><strong>تصميم 3D</strong><span>قبل ما تدفع تنفيذ</span></div>
         <div><strong>عقد بجدول زمني</strong><span>ومراحل دفع واضحة</span></div>
-        <div><strong>ضمان مكتوب</strong><span>على الخامة والتركيب</span></div>
+        <div><strong>ضمان 25 سنة</strong><span>على برجولات الحديد والألومنيوم</span></div>
       </div>
     </section>
 
@@ -70,10 +71,18 @@
       <div class="wrap">
         <div class="sec-head">
           <p class="eyebrow">خدماتنا</p>
-          <h2>خمس حلول، ورشة واحدة.</h2>
-          <p>كل خدمة ليها خاماتها وقطاعاتها، والسعر المكتوب هو بداية سعر المتر المربع شامل التوريد والتركيب.</p>
+          <h2>من البرجولة لتشطيب المكان كله.</h2>
+          <p>تلات أنواع برجولات، كل نوع بخاماته وأشكاله، وكل الإضافات اللي تكمّل الجلسة. والسعر المكتوب هو بداية سعر المتر المربع شامل التوريد والتركيب.</p>
         </div>
         <div class="services" id="servicesList"></div>
+        <div class="extras-strip">
+          <p class="extras-h">إضافات مع أي برجولة</p>
+          <ul class="extras" id="extrasList"></ul>
+        </div>
+        <div class="other-svc">
+          <h3>وكمان</h3>
+          <div class="other-list" id="otherList"></div>
+        </div>
       </div>
     </section>
 
@@ -82,16 +91,10 @@
       <div class="wrap">
         <div class="sec-head">
           <p class="eyebrow">شغلنا</p>
-          <h2>مشاريع اتنفّذت فعلاً.</h2>
-          <p>اضغط على أي صورة لتكبيرها. فلتر حسب نوع الشغل.</p>
+          <h2>من شغلنا.</h2>
+          <p>اضغط على أي صورة لتكبيرها. الصور المكتوب عليها "تصميم 3D" تصميمات بنعملها للعميل قبل التنفيذ.</p>
         </div>
-        <div class="filters" role="tablist" aria-label="تصنيف المشاريع" id="filters">
-          <button type="button" role="tab" aria-selected="true" data-cat="all">الكل</button>
-          <button type="button" role="tab" aria-selected="false" data-cat="wood">خشب</button>
-          <button type="button" role="tab" aria-selected="false" data-cat="metal">معدن</button>
-          <button type="button" role="tab" aria-selected="false" data-cat="aluminum">ألومنيوم</button>
-          <button type="button" role="tab" aria-selected="false" data-cat="glass">زجاج</button>
-        </div>
+        <div class="filters" role="tablist" aria-label="تصنيف المشاريع" id="filters"></div>
         <div class="gallery" id="gallery"></div>
         <p class="gallery-empty" id="galleryEmpty" hidden>صور هذا القسم هتنزل قريب. ابعتلنا على واتساب ونبعتلك مشاريع مشابهة.</p>
       </div>
@@ -108,15 +111,16 @@
         <div class="formula" aria-label="معادلة التسعير">
           <div class="f-term"><b>المساحة</b><span>طول × عرض بالمتر</span></div>
           <i aria-hidden="true">×</i>
-          <div class="f-term"><b>سعر المتر</b><span>حسب الخامة والقطاع</span></div>
+          <div class="f-term"><b>سعر المتر</b><span>حسب نوع البرجولة</span></div>
           <i aria-hidden="true">×</i>
-          <div class="f-term"><b>درجة التشطيب</b><span>أساسي · سيجنتشر · بريستيج</span></div>
+          <div class="f-term"><b>الخامة</b><span>نوع الخشب، القطاع، اللون</span></div>
           <i aria-hidden="true">+</i>
-          <div class="f-term"><b>الإضافات</b><span>إضاءة، ستائر، موتور</span></div>
+          <div class="f-term"><b>الإضافات</b><span>سقف، إضاءة، أرضيات، فرش</span></div>
           <i aria-hidden="true">=</i>
           <div class="f-term f-result"><b>عرض السعر</b><span>توريد + تركيب + ضمان</span></div>
         </div>
-        <div class="tiers" id="tiers"></div>
+        <div class="tiers" id="priceTables"></div>
+        <p class="hint price-hint">الأسعار بالجنيه المصري للمتر المربع، شاملة التوريد والتركيب. الغرف المقفولة بالكامل بتتسعر بعد ما نعرف تفاصيلها.</p>
         <div class="includes">
           <div>
             <h3>السعر بيشمل</h3>
@@ -161,12 +165,18 @@
         <form class="est" id="estForm" novalidate>
           <div class="est-controls">
             <fieldset>
-              <legend><span class="step">1</span> نوع الشغل</legend>
-              <div class="chips chips-svc" id="estService"></div>
+              <legend><span class="step">1</span> نوع البرجولة</legend>
+              <div class="chips chips-cat" id="estCat"></div>
+              <div class="chips chips-svc" id="estType"></div>
             </fieldset>
 
             <fieldset>
-              <legend><span class="step">2</span> المقاس التقريبي</legend>
+              <legend><span class="step">2</span> <span id="estOptLabel">الخامة</span></legend>
+              <div class="chips" id="estOpt"></div>
+            </fieldset>
+
+            <fieldset>
+              <legend><span class="step">3</span> المقاس التقريبي</legend>
               <div class="size-row">
                 <label class="num">
                   <span>الطول</span>
@@ -191,13 +201,8 @@
             </fieldset>
 
             <fieldset>
-              <legend><span class="step">3</span> درجة التشطيب</legend>
-              <div class="chips" id="estTier"></div>
-            </fieldset>
-
-            <fieldset>
               <legend><span class="step">4</span> إضافات</legend>
-              <div class="addons" id="estAddons"></div>
+              <div class="addon-groups" id="estAddons"></div>
             </fieldset>
           </div>
 
@@ -209,12 +214,13 @@
             <dl class="sum">
               <div><dt>الخدمة</dt><dd id="sumService">—</dd></div>
               <div><dt>المساحة</dt><dd id="sumArea">—</dd></div>
-              <div><dt>التشطيب</dt><dd id="sumTier">—</dd></div>
+              <div><dt id="sumOptLabel">الخامة</dt><dd id="sumOpt">—</dd></div>
+              <div id="sumQuoteRow" hidden><dt>بنود حسب الاختيار</dt><dd id="sumQuote">—</dd></div>
             </dl>
             <div class="price">
               <span>التكلفة التقريبية</span>
               <strong id="sumPrice">—</strong>
-              <small>جنيه مصري · توريد وتركيب</small>
+              <small id="sumPriceNote">جنيه مصري · توريد وتركيب</small>
             </div>
             <a class="btn btn-block" href="#book" id="estToBook" data-track="estimate_to_book">احجز معاينة بالتقدير ده</a>
             <a class="btn btn-ghost btn-block js-wa-est" href="#" data-track="estimate_whatsapp">ابعته على واتساب</a>
@@ -270,7 +276,7 @@
           </details>
           <details>
             <summary>الخشب بيستحمل الشمس والمطر؟</summary>
-            <p>بنستخدم خشب معالج بالضغط وطبقات حماية خارجية مقاومة للأشعة فوق البنفسجية والرطوبة، وبنديك جدول صيانة بسيط (دهان تجديد كل سنة ونص لسنتين تقريباً).</p>
+            <p>بنشتغل خشب موسكي سويدي أو بيتش باين، معالج ضد الرطوبة والحشرات ومدهون بطبقات حماية خارجية مقاومة للشمس. ولو عايز شكل الخشب من غير صيانة خالص، الخشمونيوم (ألومنيوم بلون الخشب) هو الحل.</p>
           </details>
           <details>
             <summary>محتاج تصريح من الكمبوند أو الجمعية؟</summary>
@@ -282,7 +288,7 @@
           </details>
           <details>
             <summary>الضمان بيغطي إيه؟</summary>
-            <p>عيوب الخامة والتصنيع والتركيب، والمدة بتتكتب في العقد حسب نوع الشغل. الصيانة بعد الضمان متاحة بعقد سنوي.</p>
+            <p>برجولات الحديد المدهون إلكتروستاتيك والألومنيوم عليها ضمان 25 سنة. باقي الأعمال ضمانها بيتكتب في العقد حسب نوع الشغل.</p>
           </details>
         </div>
       </div>
@@ -368,7 +374,8 @@
     <div class="wrap foot-row">
       <div>
         <b class="foot-logo">ARCOVA NIT STUDIO</b>
-        <p>برجولات خشبية ومعدنية، أعمال الزجاج والألومنيوم.</p>
+        <p>برجولات خشب وحديد وألومنيوم، أعمال الزجاج والألومنيوم، التشطيبات والكلادينج.</p>
+        <p class="foot-tag" id="footTag"></p>
       </div>
       <div class="foot-links" id="footLinks"></div>
       <p class="copy">© <span id="year"></span> Arcova NIT Studio</p>

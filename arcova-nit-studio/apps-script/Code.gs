@@ -1,5 +1,5 @@
 /**
- * Arcova NIT Studio — Leads Webhook (v2)
+ * Arcova NIT Studio — Leads Webhook (v3)
  * Google Apps Script bound to the Arcova Leads spreadsheet.
  *
  * What it does
@@ -7,7 +7,8 @@
  *    Columns 1–14 keep the same order as v1, so existing rows stay aligned.
  *  - Saves the client's site photo (optional) into a Drive folder and links it in the row.
  *  - Optional e-mail alert for every new lead.
- *  - setup(): creates headers, status dropdown and formatting (run once from the editor).
+ *  - doGet?prices=1: serves the "Prices" tab so the page shows the prices typed in the sheet.
+ *  - setup(): creates headers, status dropdown, the Prices tab and formatting (run once).
  *  - buildAdsAudience(): turns your existing customers sheet into a Meta / Google
  *    Customer Match upload list (normalised Egyptian phones, deduplicated).
  */
@@ -22,12 +23,76 @@ const HEADERS = [
   'التاريخ', 'الاسم', 'الموبايل', 'المنطقة', 'المشروع', 'المقاس', 'التقدير', 'الإضافات',
   'صورة المكان', 'ملاحظات', 'المصدر (utm_source)', 'الحملة (utm_campaign)', 'الحالة', 'متابعة',
   // v2 columns
-  'رقم الطلب', 'درجة التشطيب', 'وقت التواصل', 'utm_medium', 'utm_content', 'utm_term',
+  'رقم الطلب', 'الخامة / المواصفات', 'وقت التواصل', 'utm_medium', 'utm_content', 'utm_term',
   'Click ID', 'صفحة الدخول', 'Referrer', 'واتساب'
 ];
 
-function doGet() {
-  return json_({ ok: true, service: 'arcova-leads-webhook', version: 2 });
+const PRICES_SHEET = 'Prices';
+const PRICE_FIELDS = ['min', 'max', 'minTotal', 'fixed', 'perM2', 'factor'];
+const PRICE_HEADERS = ['id (لا تغيّره)', 'البند', 'سعر المتر من', 'سعر المتر إلى', 'أقل قيمة مشروع', 'سعر ثابت', 'سعر للمتر (إضافات)', 'معامل الخامة'];
+// Starting rows for the Prices tab — same ids and starting numbers as config.js.
+const PRICE_SEED = [
+  ['wood-slats', 'خشب — برجولة سقف شرايح', 2400, 3200, 25000, '', '', ''],
+  ['wood-solid', 'خشب — برجولة سقف مصمت', 3000, 4000, 30000, '', '', ''],
+  ['wood-awning', 'خشب — تندة', 2200, 3000, 15000, '', '', ''],
+  ['swedish', 'خشب — موسكي سويدي', '', '', '', '', '', 1],
+  ['pitch-pine', 'خشب — بيتش باين', '', '', '', '', '', 1.2],
+  ['metal-design', 'حديد — برجولة بتصميم خاص', 2000, 3000, 22000, '', '', ''],
+  ['metal-awning', 'حديد — تندة بسقف شرايح', 1800, 2600, 15000, '', '', ''],
+  ['sec-8', 'حديد — قطاع 8×8', '', '', '', '', '', 1],
+  ['sec-10', 'حديد — قطاع 10×10', '', '', '', '', '', 1.2],
+  ['alu-fixed', 'ألومنيوم — شرائح ثابتة', 4200, 5500, 35000, '', '', ''],
+  ['alu-manual', 'ألومنيوم — شرائح متحركة مانيوال', 6000, 7500, 55000, '', '', ''],
+  ['alu-auto', 'ألومنيوم — شرائح متحركة أوتوماتيك', 7500, 9500, 70000, '', '', ''],
+  ['alu-color', 'ألومنيوم — ألوان سادة', '', '', '', '', '', 1],
+  ['alu-wood', 'ألومنيوم — خشمونيوم', '', '', '', '', '', 1.12],
+  ['roof-acrylic', 'إضافة — سقف أكريليك', '', '', '', '', 900, ''],
+  ['roof-sandwich', 'إضافة — سقف ساندوتش بانل', '', '', '', '', 1100, ''],
+  ['roof-tile', 'إضافة — سقف قرميد بلاستيك', '', '', '', '', 1000, ''],
+  ['lighting', 'إضافة — إضاءة وكهرباء', '', '', '', 7500, '', ''],
+  ['floor', 'إضافة — أرضية سيراميك أو رخام', '', '', '', '', 1200, ''],
+  ['ac', 'إضافة — تكييف (فاضي = حسب الاختيار)', '', '', '', '', '', ''],
+  ['tv', 'إضافة — شاشة', '', '', '', '', '', ''],
+  ['plants', 'إضافة — زرع طبيعي أو صناعي', '', '', '', '', '', ''],
+  ['seating', 'إضافة — جلسة خشب', '', '', '', '', '', ''],
+  ['table', 'إضافة — ترابيزة أو سفرة', '', '', '', '', '', ''],
+  ['chairs', 'إضافة — كراسي', '', '', '', '', '', ''],
+  ['full-fitout', 'إضافة — تجهيزات كاملة', '', '', '', '', '', '']
+];
+
+function doGet(e) {
+  if (e && e.parameter && e.parameter.prices) {
+    const cache = CacheService.getScriptCache();
+    const hit = cache.get('prices');
+    if (hit) return json_({ ok: true, prices: JSON.parse(hit) });
+    const prices = readPrices_();
+    cache.put('prices', JSON.stringify(prices), 300); // 5 minutes
+    return json_({ ok: true, prices: prices });
+  }
+  return json_({ ok: true, service: 'arcova-leads-webhook', version: 3 });
+}
+
+/** Reads the Prices tab into { id: { min, max, ... } }, skipping empty cells. */
+function readPrices_() {
+  const sheet = SpreadsheetApp.openById(SPREADSHEET_ID).getSheetByName(PRICES_SHEET);
+  if (!sheet || sheet.getLastRow() < 2) return {};
+  const out = {};
+  sheet.getRange(2, 1, sheet.getLastRow() - 1, 8).getValues().forEach(function (r) {
+    const id = String(r[0]).trim();
+    if (!id) return;
+    const item = {};
+    PRICE_FIELDS.forEach(function (f, i) {
+      const v = r[i + 2];
+      if (v !== '' && v !== null && !isNaN(Number(v))) item[f] = Number(v);
+    });
+    out[id] = item;
+  });
+  return out;
+}
+
+/** Clears the 5-minute price cache — run after editing prices to make them live immediately. */
+function refreshPrices() {
+  CacheService.getScriptCache().remove('prices');
 }
 
 function doPost(e) {
@@ -59,7 +124,7 @@ function doPost(e) {
       'جديد',
       '',
       clean_(data.leadId),
-      clean_(data.tier),
+      clean_(data.material || data.tier),
       clean_(data.contactTime),
       clean_(data.utmMedium),
       clean_(data.utmContent),
@@ -91,6 +156,19 @@ function setup() {
   sheet.getRange(2, 1, sheet.getMaxRows() - 1, 1).setNumberFormat('yyyy-mm-dd hh:mm');
   sheet.setColumnWidths(1, HEADERS.length, 140);
   getPhotosFolder_();
+
+  const ss = SpreadsheetApp.openById(SPREADSHEET_ID);
+  if (!ss.getSheetByName(PRICES_SHEET)) {
+    const prices = ss.insertSheet(PRICES_SHEET);
+    prices.getRange(1, 1, 1, PRICE_HEADERS.length).setValues([PRICE_HEADERS])
+      .setFontWeight('bold').setBackground('#183f33').setFontColor('#ffffff');
+    prices.getRange(2, 1, PRICE_SEED.length, PRICE_HEADERS.length).setValues(PRICE_SEED);
+    prices.getRange(2, 3, PRICE_SEED.length, 5).setNumberFormat('#,##0');
+    prices.setFrozenRows(1);
+    prices.setRightToLeft(true);
+    prices.setColumnWidth(1, 120);
+    prices.setColumnWidth(2, 260);
+  }
 }
 
 /**
@@ -179,7 +257,7 @@ function notify_(data, phone, imageUrl) {
     'الاسم: ' + clean_(data.name),
     'الموبايل: ' + phone,
     'المنطقة: ' + clean_(data.location),
-    'المشروع: ' + clean_(data.project) + ' · ' + clean_(data.size) + ' · ' + clean_(data.tier),
+    'المشروع: ' + clean_(data.project) + ' · ' + clean_(data.size) + ' · ' + clean_(data.material || data.tier),
     'التقدير: ' + clean_(data.estimate),
     'الإضافات: ' + clean_(data.addOns),
     'وقت التواصل: ' + clean_(data.contactTime),
