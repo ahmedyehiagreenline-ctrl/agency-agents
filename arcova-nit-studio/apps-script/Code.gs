@@ -1,5 +1,5 @@
 /**
- * Arcova NIT Studio — Leads Webhook (v3)
+ * Arcova NIT Studio — Leads Webhook (v4)
  * Google Apps Script bound to the Arcova Leads spreadsheet.
  *
  * What it does
@@ -7,6 +7,7 @@
  *    Columns 1–14 keep the same order as v1, so existing rows stay aligned.
  *  - Saves the client's site photo (optional) into a Drive folder and links it in the row.
  *  - Optional e-mail alert for every new lead.
+ *  - doGet?gallery=1: lists the photos in the Drive folder "Arcova — معرض الأعمال" for the gallery.
  *  - doGet?prices=1: serves the "Prices" tab so the page shows the prices typed in the sheet.
  *  - setup(): creates headers, status dropdown, the Prices tab and formatting (run once).
  *  - buildAdsAudience(): turns your existing customers sheet into a Meta / Google
@@ -24,7 +25,9 @@ const HEADERS = [
   'صورة المكان', 'ملاحظات', 'المصدر (utm_source)', 'الحملة (utm_campaign)', 'الحالة', 'متابعة',
   // v2 columns
   'رقم الطلب', 'الخامة / المواصفات', 'وقت التواصل', 'utm_medium', 'utm_content', 'utm_term',
-  'Click ID', 'صفحة الدخول', 'Referrer', 'واتساب'
+  'Click ID', 'صفحة الدخول', 'Referrer', 'واتساب',
+  // v4 columns
+  'اللون', 'لغة الصفحة', 'عرض السعر PDF'
 ];
 
 const PRICES_SHEET = 'Prices';
@@ -44,8 +47,8 @@ const PRICE_SEED = [
   ['alu-fixed', 'ألومنيوم — شرائح ثابتة', 4200, 5500, 35000, '', '', ''],
   ['alu-manual', 'ألومنيوم — شرائح متحركة مانيوال', 6000, 7500, 55000, '', '', ''],
   ['alu-auto', 'ألومنيوم — شرائح متحركة أوتوماتيك', 7500, 9500, 70000, '', '', ''],
-  ['alu-color', 'ألومنيوم — ألوان سادة', '', '', '', '', '', 1],
-  ['alu-wood', 'ألومنيوم — خشمونيوم', '', '', '', '', '', 1.12],
+  ['alu-std', 'ألومنيوم — قطاع تقيل', '', '', '', '', '', 1],
+  ['alu-xl', 'ألومنيوم — قطاع تقيل جداً', '', '', '', '', '', 1.15],
   ['roof-acrylic', 'إضافة — سقف أكريليك', '', '', '', '', 900, ''],
   ['roof-sandwich', 'إضافة — سقف ساندوتش بانل', '', '', '', '', 1100, ''],
   ['roof-tile', 'إضافة — سقف قرميد بلاستيك', '', '', '', '', 1000, ''],
@@ -61,6 +64,14 @@ const PRICE_SEED = [
 ];
 
 function doGet(e) {
+  if (e && e.parameter && e.parameter.gallery) {
+    const cache = CacheService.getScriptCache();
+    const hit = cache.get('gallery');
+    if (hit) return json_({ ok: true, gallery: JSON.parse(hit) });
+    const items = readGallery_();
+    try { cache.put('gallery', JSON.stringify(items), 600); } catch (ignored) {} // 10 minutes (skipped if > 100KB)
+    return json_({ ok: true, gallery: items });
+  }
   if (e && e.parameter && e.parameter.prices) {
     const cache = CacheService.getScriptCache();
     const hit = cache.get('prices');
@@ -69,7 +80,7 @@ function doGet(e) {
     cache.put('prices', JSON.stringify(prices), 300); // 5 minutes
     return json_({ ok: true, prices: prices });
   }
-  return json_({ ok: true, service: 'arcova-leads-webhook', version: 3 });
+  return json_({ ok: true, service: 'arcova-leads-webhook', version: 4 });
 }
 
 /** Reads the Prices tab into { id: { min, max, ... } }, skipping empty cells. */
@@ -90,6 +101,64 @@ function readPrices_() {
   return out;
 }
 
+/* ---------------- Gallery from Google Drive ----------------
+ * Folder "Arcova — معرض الأعمال" with one sub-folder per category, named "<id> - <name>".
+ * Drop photos in the right sub-folder and they appear on the page (newest first).
+ * File name = caption:  "برجولة خشب سقف شرايح | الشيخ زايد.jpg"  → title | place
+ * Put "3D" anywhere in the name to mark it as a 3D design.
+ */
+const GALLERY_FOLDER_NAME = 'Arcova — معرض الأعمال';
+const GALLERY_CATEGORIES = [
+  ['wood', 'برجولات خشب'], ['metal', 'برجولات حديد'], ['alu', 'برجولات ألومنيوم'],
+  ['glass', 'أعمال الزجاج'], ['aluminum', 'أعمال الألومنيوم'], ['finishing', 'التشطيبات العامة'], ['cladding', 'أعمال الكلادينج']
+];
+
+function getGalleryFolder_() {
+  const it = DriveApp.getFoldersByName(GALLERY_FOLDER_NAME);
+  return it.hasNext() ? it.next() : DriveApp.createFolder(GALLERY_FOLDER_NAME);
+}
+
+function readGallery_() {
+  const root = getGalleryFolder_();
+  const items = [];
+  const subs = root.getFolders();
+  while (subs.hasNext()) {
+    const folder = subs.next();
+    const cat = String(folder.getName()).split(' - ')[0].trim();
+    const files = folder.getFiles();
+    while (files.hasNext()) {
+      const f = files.next();
+      if (String(f.getMimeType()).indexOf('image/') !== 0) continue;
+      if (f.getSharingAccess() !== DriveApp.Access.ANYONE_WITH_LINK) {
+        try { f.setSharing(DriveApp.Access.ANYONE_WITH_LINK, DriveApp.Permission.VIEW); } catch (err) { continue; }
+      }
+      const base = String(f.getName()).replace(/\.[^.]+$/, '');
+      const render = /(^|[^a-z])3d([^a-z]|$)/i.test(base);
+      const parts = base.replace(/\b3d\b/ig, '').replace(/[_]+/g, ' ').split('|');
+      const title = parts[0].replace(/\s+/g, ' ').replace(/^[\s\-–]+|[\s\-–]+$/g, '');
+      // Camera-style names (IMG 2034, WhatsApp Image…) get no caption; the page shows the category instead
+      const plain = /^(img|dsc|pxl|photo|whatsapp|screenshot|image)|^[\d\s-]+$/i.test(title) ? '' : title;
+      items.push({
+        id: f.getId(),
+        cat: cat,
+        title: plain,
+        place: parts[1] ? parts[1].trim() : '',
+        kind: render ? 'render' : '',
+        src: 'https://lh3.googleusercontent.com/d/' + f.getId() + '=w1800',
+        thumb: 'https://lh3.googleusercontent.com/d/' + f.getId() + '=w900',
+        t: f.getDateCreated().getTime()
+      });
+    }
+  }
+  items.sort(function (a, b) { return b.t - a.t; });
+  return items;
+}
+
+/** Clears the gallery cache — run after adding photos to show them immediately. */
+function refreshGallery() {
+  CacheService.getScriptCache().remove('gallery');
+}
+
 /** Clears the 5-minute price cache — run after editing prices to make them live immediately. */
 function refreshPrices() {
   CacheService.getScriptCache().remove('prices');
@@ -106,6 +175,7 @@ function doPost(e) {
     const sheet = getLeadsSheet_();
     const phone = normalizeEgyptPhone_(data.phone) || clean_(data.phone);
     const imageUrl = data.imageData ? savePhoto_(data) : clean_(data.imageUrl);
+    const quoteUrl = data.quote ? buildQuotePdf_(data) : '';
 
     lock.waitLock(20000);
     sheet.appendRow([
@@ -132,12 +202,15 @@ function doPost(e) {
       clean_(data.clickId),
       clean_(data.pageUrl),
       clean_(data.referrer),
-      phone ? 'https://wa.me/2' + phone : ''
+      phone ? 'https://wa.me/2' + phone : '',
+      clean_(data.color),
+      clean_(data.lang) === 'en' ? 'English' : 'عربي',
+      quoteUrl
     ]);
     lock.releaseLock();
 
     if (NOTIFY_EMAIL) notify_(data, phone, imageUrl);
-    return json_({ ok: true, leadId: clean_(data.leadId) });
+    return json_({ ok: true, leadId: clean_(data.leadId), quoteUrl: quoteUrl });
   } catch (error) {
     try { lock.releaseLock(); } catch (ignored) {}
     return json_({ ok: false, error: String(error.message || error) });
@@ -156,6 +229,12 @@ function setup() {
   sheet.getRange(2, 1, sheet.getMaxRows() - 1, 1).setNumberFormat('yyyy-mm-dd hh:mm');
   sheet.setColumnWidths(1, HEADERS.length, 140);
   getPhotosFolder_();
+
+  const gallery = getGalleryFolder_();
+  GALLERY_CATEGORIES.forEach(function (c) {
+    const name = c[0] + ' - ' + c[1];
+    if (!gallery.getFoldersByName(name).hasNext()) gallery.createFolder(name);
+  });
 
   const ss = SpreadsheetApp.openById(SPREADSHEET_ID);
   if (!ss.getSheetByName(PRICES_SHEET)) {
@@ -212,6 +291,81 @@ function buildAdsAudience(sourceSheetName) {
   out.getRange(1, 1, rows.length, rows[0].length).setNumberFormat('@').setValues(rows);
   Logger.log('Audience rows: ' + (rows.length - 1) + ' · skipped (invalid/duplicate): ' + skipped);
   return rows.length - 1;
+}
+
+/* ---------------- Quote PDF ----------------
+ * The page sends the quote already translated (Arabic or English). This lays it out with
+ * simple tables (what Google's HTML→PDF converter supports), saves it in the Drive folder
+ * "Arcova — عروض الأسعار" and returns a view link. Any failure returns '' and the page
+ * falls back to the browser's "Save as PDF".
+ */
+const QUOTES_FOLDER_NAME = 'Arcova — عروض الأسعار';
+
+function buildQuotePdf_(data) {
+  try {
+    const q = data.quote;
+    const rtl = q.lang !== 'en';
+    const dir = rtl ? 'rtl' : 'ltr', start = rtl ? 'right' : 'left', end = rtl ? 'left' : 'right';
+    const e = function (v) { return clean_(v).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); };
+    const pairs = function (rows) {
+      return (rows || []).map(function (r) {
+        return '<tr><td style="color:#6d6555;padding:3px 0;">' + e(r[0]) + '</td><td style="font-weight:bold;text-align:' + end + ';padding:3px 0;">' + e(r[1]) + '</td></tr>';
+      }).join('');
+    };
+    let logo = '';
+    try {
+      if (/^https:\/\//.test(clean_(q.logoUrl))) {
+        const res = UrlFetchApp.fetch(q.logoUrl, { muteHttpExceptions: true });
+        if (res.getResponseCode() === 200) logo = '<img src="data:image/png;base64,' + Utilities.base64Encode(res.getContent()) + '" width="84" height="84">';
+      }
+    } catch (ignored) {}
+    const items = (q.items || []).map(function (it) {
+      return '<tr><td style="padding:8px;border-bottom:1px solid #ddd3c1;">' + e(it[0]) + (it[1] ? '<br><span style="color:#6d6555;font-size:10px;">' + e(it[1]) + '</span>' : '') + '</td>' +
+        '<td style="padding:8px;border-bottom:1px solid #ddd3c1;white-space:nowrap;">' + e(it[2]) + '</td>' +
+        '<td dir="ltr" style="padding:8px;border-bottom:1px solid #ddd3c1;text-align:' + end + ';white-space:nowrap;">' + e(it[3]) + '</td></tr>';
+    }).join('');
+    const html =
+      '<html dir="' + dir + '"><head><meta charset="utf-8"><style>' +
+      'body{font-family:Arial,Tahoma,sans-serif;font-size:12px;color:#1d1a14;direction:' + dir + ';margin:0;}' +
+      'table{border-collapse:collapse;width:100%;} td,th{text-align:' + start + ';vertical-align:top;}' +
+      'h1{font-size:20px;margin:0 0 6px;} h3{font-size:13px;color:#8f6b33;margin:18px 0 6px;}' +
+      '</style></head><body>' +
+      '<div style="border-top:6px solid #c9a45c;padding:28px 34px;">' +
+      '<table><tr>' +
+        '<td style="width:96px;">' + logo + '</td>' +
+        '<td><div style="font-size:15px;font-weight:bold;letter-spacing:3px;" dir="ltr">ARCOVA NIT STUDIO</div>' +
+          '<div style="font-size:9px;letter-spacing:3px;color:#8f6b33;" dir="ltr">FIRST AT THE FINISH LINE</div>' +
+          '<div style="color:#6d6555;" dir="ltr">' + e(q.phone) + '</div></td>' +
+        '<td style="width:44%;"><h1>' + e(q.title) + '</h1><table>' + pairs(q.meta) + '</table></td>' +
+      '</tr></table>' +
+      '<hr style="border:0;border-top:1px solid #ddd3c1;margin:18px 0;">' +
+      '<table><tr>' +
+        '<td style="width:48%;"><h3>' + e(q.clientLabel) + '</h3><table>' + pairs(q.client) + '</table></td><td style="width:4%;"></td>' +
+        '<td style="width:48%;"><h3>' + e(q.projectLabel) + '</h3><table>' + pairs(q.project) + '</table></td>' +
+      '</tr></table>' +
+      (items ? '<table style="margin-top:18px;"><tr style="background:#efe7d8;color:#6d6555;">' +
+        '<th style="padding:8px;">' + e(q.head[0]) + '</th><th style="padding:8px;">' + e(q.head[1]) + '</th><th style="padding:8px;text-align:' + end + ';">' + e(q.head[2]) + '</th></tr>' + items + '</table>' : '') +
+      '<table style="margin-top:18px;background:#17140f;color:#efe8da;"><tr>' +
+        '<td style="padding:14px 18px;">' + e(q.totalLabel) + (q.totalNote ? '<br><span style="font-size:10px;color:#b3a891;">' + e(q.totalNote) + '</span>' : '') + '</td>' +
+        '<td style="padding:14px 18px;text-align:' + end + ';font-size:18px;font-weight:bold;color:#ecd08e;white-space:nowrap;"><span dir="ltr">' + e(q.total) + '</span> ' + e(q.unit) + '</td>' +
+      '</tr></table>' +
+      (q.notes ? '<h3>' + e(q.notesLabel) + '</h3><div>' + e(q.notes) + '</div>' : '') +
+      '<h3>' + e(q.termsLabel) + '</h3><ol style="color:#6d6555;margin:0;padding-' + start + ':18px;">' +
+        (q.terms || []).map(function (x) { return '<li>' + e(x) + '</li>'; }).join('') + '</ol>' +
+      '<hr style="border:0;border-top:1px solid #ddd3c1;margin:18px 0 10px;">' +
+      '<div style="font-weight:bold;">' + e(q.next) + '</div>' +
+      '</div></body></html>';
+
+    const name = clean_(data.leadId) + ' - ' + clean_(data.name) + '.pdf';
+    const pdf = Utilities.newBlob(html, 'text/html', 'quote.html').getAs('application/pdf').setName(name);
+    const it = DriveApp.getFoldersByName(QUOTES_FOLDER_NAME);
+    const folder = it.hasNext() ? it.next() : DriveApp.createFolder(QUOTES_FOLDER_NAME);
+    const file = folder.createFile(pdf);
+    file.setSharing(DriveApp.Access.ANYONE_WITH_LINK, DriveApp.Permission.VIEW);
+    return file.getUrl();
+  } catch (err) {
+    return '';
+  }
 }
 
 /* ---------------- helpers ---------------- */
