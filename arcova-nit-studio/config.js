@@ -1,204 +1,189 @@
 /**
- * Arcova NIT Studio — إعدادات صفحة الهبوط
+ * Arcova NIT Studio — إعدادات الصفحة
  * ----------------------------------------------------------------
- * كل حاجة ممكن تتغير من غير ما تلمس التصميم موجودة هنا:
- * رابط الشيت، رقم الواتساب، أكواد البيكسل، الخدمات والألوان والأسعار، صور الشغل.
- *
- * - الأسعار: لو ربطت الشيت، الصفحة بتقرا الأسعار من تاب "Prices" (الرقم هناك بيغلب الرقم هنا).
- * - الصور: لو ربطت الشيت، أي صورة ترميها في فولدر "Arcova — معرض الأعمال" على Google Drive
- *   بتظهر في معرض الشغل لوحدها (شوف README).
- * - أي نص فيه نسخة إنجليزي بيتكتب في خانة بنفس الاسم + _en (مثلاً name و name_en).
+ * - الأسعار: لو ربطت الشيت، الصفحة بتقرا تاب "Prices" (الرقم هناك بيغلب الرقم هنا).
+ * - الصور: أي صورة في فولدر "Arcova — معرض الأعمال" على Drive بتظهر في المعرض لوحدها.
+ * - النص الإنجليزي بيتكتب في خانة بنفس الاسم + _en.
  */
 window.ARCOVA = {
   brand: {
-    name: 'Arcova NIT Studio',
     phone: '+20 15 53955523',
-    whatsapp: '201553955523',          // بدون + وبدون مسافات
+    whatsapp: '201553955523',
     facebook: 'https://www.facebook.com/Arcova.nitstudio',
     instagram: '',
     tiktok: ''
   },
-
-  /** اللغة الافتراضية لو الزائر ما اختارش. لينك الإعلان ممكن يحدد اللغة: ?lang=en */
   defaultLang: 'ar',
 
-  /**
-   * رابط Google Apps Script بعد النشر (Deploy → Web app).
-   * شكله: https://script.google.com/macros/s/XXXXXXXX/exec
-   * لو فاضي، الطلب يتحول لواتساب تلقائياً عشان مفيش عميل يضيع.
-   */
+  /** رابط Google Apps Script بعد النشر — لو فاضي الطلب بيروح واتساب */
   sheetWebhookUrl: '',
 
-  /** أكواد التتبع للحملات — سيبها فاضية لو مش مستخدمها */
-  tracking: {
-    metaPixelId: '',
-    ga4Id: '',
-    googleAdsId: '',
-    googleAdsLeadLabel: '',
-    tiktokPixelId: ''
-  },
+  tracking: { metaPixelId: '', ga4Id: '', googleAdsId: '', googleAdsLeadLabel: '', tiktokPixelId: '' },
 
-  /** أرقام الثقة في الهيرو. اكتب أرقامك الحقيقية فقط — الفاضي مش بيظهر. */
-  stats: [
-    { value: '25', label: 'سنة ضمان على الحديد والألومنيوم', label_en: 'year warranty on steel & aluminium' },
-    { value: '', label: 'سنة خبرة', label_en: 'years of experience' },
-    { value: '', label: 'مشروع منفّذ', label_en: 'projects delivered' }
+  /** صور الهيرو (بتتبدل كل كام ثانية) */
+  hero: ['hero-rooftop-dusk', 'alu-black-villa', 'lattice-green-lounge', 'gazebo-terrace', 'wood-cube-garden'],
+
+  /** من الفكرة للحقيقة — نفس المشروع في 3 مراحل */
+  story: [
+    { img: 'sketch-steel', name: 'الاسكتش', name_en: 'Sketch' },
+    { img: 'steel-black-real', name: 'التنفيذ', name_en: 'Build' },
+    { img: 'steel-black-render', name: 'المساحة جاهزة', name_en: 'Ready to live' }
   ],
 
-  /** ألوان جاهزة (hex للعرض فقط). أي لون تاني العميل يكتبه في الملاحظات. */
   palettes: {
     wood: [
-      { id: 'natural', name: 'طبيعي فاتح', name_en: 'Natural', hex: '#c7965f' },
+      { id: 'natural', name: 'طبيعي', name_en: 'Natural', hex: '#c7965f' },
       { id: 'teak', name: 'تيك', name_en: 'Teak', hex: '#9a6134' },
       { id: 'walnut', name: 'جوزي', name_en: 'Walnut', hex: '#6a4128' },
       { id: 'dark', name: 'بني غامق', name_en: 'Dark brown', hex: '#46291a' },
-      { id: 'ebony', name: 'أبنوسي', name_en: 'Ebony', hex: '#231a15' },
-      { id: 'olive', name: 'أخضر زيتي', name_en: 'Olive green', hex: '#7f9870' },
+      { id: 'olive', name: 'أخضر زيتي', name_en: 'Olive', hex: '#7f9870' },
       { id: 'white', name: 'أبيض', name_en: 'White', hex: '#ece7dc' }
     ],
     metal: [
-      { id: 'black', name: 'أسود مطفي', name_en: 'Matte black', hex: '#1d1d1d' },
-      { id: 'anthracite', name: 'رمادي أنثراسايت', name_en: 'Anthracite', hex: '#3b3f42' },
+      { id: 'black', name: 'أسود', name_en: 'Black', hex: '#1d1d1d' },
+      { id: 'anthracite', name: 'أنثراسايت', name_en: 'Anthracite', hex: '#3b3f42' },
       { id: 'white', name: 'أبيض', name_en: 'White', hex: '#ebe9e3' },
       { id: 'bronze', name: 'برونزي', name_en: 'Bronze', hex: '#6f5236' },
-      { id: 'olive', name: 'أخضر زيتي', name_en: 'Olive green', hex: '#5f7357' },
       { id: 'woodgrain', name: 'بلون الخشب', name_en: 'Wood-effect', hex: '#8a5a33' }
     ],
     alu: [
-      { id: 'black', name: 'أسود مطفي', name_en: 'Matte black', hex: '#1d1d1d' },
-      { id: 'anthracite', name: 'رمادي أنثراسايت', name_en: 'Anthracite', hex: '#3b3f42' },
+      { id: 'black', name: 'أسود', name_en: 'Black', hex: '#1d1d1d' },
+      { id: 'anthracite', name: 'أنثراسايت', name_en: 'Anthracite', hex: '#3b3f42' },
       { id: 'white', name: 'أبيض', name_en: 'White', hex: '#ebe9e3' },
       { id: 'champagne', name: 'شامبين', name_en: 'Champagne', hex: '#b9a17a' },
-      { id: 'khash-light', name: 'خشمونيوم فاتح', name_en: 'Light wood-effect', hex: '#a8764a' },
-      { id: 'khash-dark', name: 'خشمونيوم غامق', name_en: 'Dark wood-effect', hex: '#5e3b24' }
+      { id: 'khash', name: 'خشمونيوم', name_en: 'Wood-effect', hex: '#8a5a33' }
     ]
   },
 
   /**
-   * الخدمات.
-   * estimator: true  = ليها حاسبة تكلفة (البرجولات) · palette = مجموعة الألوان
-   * types:  min / max = سعر المتر المربع بالجنيه (توريد + تركيب)، minTotal = أقل قيمة مشروع
-   *         quote: true = السعر بعد توصيف العميل
-   * options: الخامة أو المواصفة، factor بيتضرب في سعر المتر
-   * ⚠️ الأرقام مبدئية للتجربة — غيّرها هنا أو من تاب Prices في الشيت.
+   * الخدمات. min / max = سعر المتر المربع (توريد + تركيب)، minTotal = أقل قيمة مشروع.
+   * quote: true = السعر بعد التوصيف. ⚠️ الأرقام مبدئية — غيّرها هنا أو من تاب Prices.
    */
   catalog: [
     {
-      id: 'wood', palette: 'wood', estimator: true,
-      name: 'برجولات خشب', name_en: 'Wood pergolas',
-      short: 'موسكي سويدي أو بيتش باين', short_en: 'Swedish pine or pitch pine',
-      desc: 'دفء الخشب الطبيعي بتفاصيل معمارية، معالج ضد الرطوبة والحشرات ومدهون بطبقات حماية للاستخدام الخارجي.',
-      desc_en: 'The warmth of natural wood with architectural detailing, treated against moisture and insects and coated for outdoor use.',
-      optionsLabel: 'نوع الخشب', optionsLabel_en: 'Wood type',
+      id: 'wood', palette: 'wood', estimator: true, img: 'hero-rooftop-dusk',
+      name: 'برجولات خشب', name_en: 'Wood pergolas', short: 'خشب', short_en: 'Wood',
+      line: 'موسكي سويدي أو بيتش باين', line_en: 'Swedish pine or pitch pine',
+      optionsLabel: 'نوع الخشب', optionsLabel_en: 'Wood',
       options: [
-        { id: 'swedish', name: 'موسكي سويدي', name_en: 'Swedish pine', note: 'الأكثر استخداماً', note_en: 'Most popular', factor: 1 },
-        { id: 'pitch-pine', name: 'بيتش باين', name_en: 'Pitch pine', note: 'أتقل وعروقه أوضح', note_en: 'Denser, bolder grain', factor: 1.2 }
+        { id: 'swedish', name: 'موسكي سويدي', name_en: 'Swedish pine', factor: 1 },
+        { id: 'pitch-pine', name: 'بيتش باين', name_en: 'Pitch pine', factor: 1.2 }
       ],
       types: [
-        { id: 'wood-slats', name: 'برجولة سقف شرايح', name_en: 'Slatted-roof pergola', note: 'ضل وتهوية', note_en: 'Shade with airflow', min: 2400, max: 3200, minTotal: 25000 },
-        { id: 'wood-solid', name: 'برجولة سقف مصمت', name_en: 'Solid-roof pergola', note: 'حماية كاملة من الشمس', note_en: 'Full sun protection', min: 3000, max: 4000, minTotal: 30000 },
-        { id: 'wood-awning', name: 'تندة خشب', name_en: 'Wood awning', note: 'على الحيطة، للبلكونة والرووف', note_en: 'Wall-mounted, balconies and rooftops', min: 2200, max: 3000, minTotal: 15000 },
-        { id: 'wood-room', name: 'غرفة معيشة مقفلة بالكامل', name_en: 'Fully enclosed living room', note: 'السعر بعد التوصيف', note_en: 'Priced on request', quote: true }
+        { id: 'wood-slats', name: 'سقف شرايح', name_en: 'Slatted roof', min: 2400, max: 3200, minTotal: 25000 },
+        { id: 'wood-solid', name: 'سقف مصمت', name_en: 'Solid roof', min: 3000, max: 4000, minTotal: 30000 },
+        { id: 'wood-awning', name: 'تندة', name_en: 'Awning', min: 2200, max: 3000, minTotal: 15000 },
+        { id: 'wood-room', name: 'غرفة مقفلة بالكامل', name_en: 'Enclosed room', quote: true }
       ]
     },
     {
-      id: 'metal', palette: 'metal', estimator: true,
-      name: 'برجولات حديد', name_en: 'Steel pergolas',
-      short: 'قطاعات 8×8 أو 10×10 سم', short_en: '8×8 or 10×10 cm sections',
-      desc: 'قوائم وعوارض حديد بقطاعات تقيلة، مدهونة إلكتروستاتيك، بتصميم على مقاس مكانك.',
-      desc_en: 'Heavy-section steel posts and beams, powder-coated, designed to fit your space.',
+      id: 'metal', palette: 'metal', estimator: true, img: 'steel-black-render',
+      name: 'برجولات حديد', name_en: 'Steel pergolas', short: 'حديد', short_en: 'Steel',
+      line: 'قطاعات 8×8 و10×10 · ضمان 25 سنة', line_en: '8×8 & 10×10 sections · 25-year warranty',
       warranty: 'ضمان 25 سنة', warranty_en: '25-year warranty',
-      optionsLabel: 'مقاس القطاع', optionsLabel_en: 'Section size',
+      optionsLabel: 'القطاع', optionsLabel_en: 'Section',
       options: [
-        { id: 'sec-8', name: 'قطاع 8×8 سم', name_en: '8×8 cm section', note: 'للمساحات العادية', note_en: 'Standard spans', factor: 1 },
-        { id: 'sec-10', name: 'قطاع 10×10 سم', name_en: '10×10 cm section', note: 'للبحور الكبيرة', note_en: 'Long spans', factor: 1.2 }
+        { id: 'sec-8', name: '8×8 سم', name_en: '8×8 cm', factor: 1 },
+        { id: 'sec-10', name: '10×10 سم', name_en: '10×10 cm', factor: 1.2 }
       ],
       types: [
-        { id: 'metal-design', name: 'برجولة حديد بتصميم خاص', name_en: 'Custom-design steel pergola', note: 'شكل على ذوقك', note_en: 'Designed to your taste', min: 2000, max: 3000, minTotal: 22000 },
-        { id: 'metal-awning', name: 'تندة حديد بسقف شرايح', name_en: 'Steel awning, slatted roof', note: 'للبلكونة والرووف', note_en: 'Balconies and rooftops', min: 1800, max: 2600, minTotal: 15000 },
-        { id: 'metal-glass-room', name: 'غرفة كاملة بتقفيلات زجاج', name_en: 'Full room with glass enclosure', note: 'السعر بعد التوصيف', note_en: 'Priced on request', quote: true }
+        { id: 'metal-design', name: 'بتصميم خاص', name_en: 'Custom design', min: 2000, max: 3000, minTotal: 22000 },
+        { id: 'metal-awning', name: 'تندة بسقف شرايح', name_en: 'Slatted awning', min: 1800, max: 2600, minTotal: 15000 },
+        { id: 'metal-glass-room', name: 'غرفة بتقفيلات زجاج', name_en: 'Glass-enclosed room', quote: true }
       ]
     },
     {
-      id: 'alu', palette: 'alu', estimator: true,
-      name: 'برجولات ألومنيوم', name_en: 'Aluminium pergolas',
-      short: 'شرائح ثابتة أو متحركة', short_en: 'Fixed or motorised louvres',
-      desc: 'ألومنيوم تقيل بكل الدهانات والألوان، ومنها ألوان الخشمونيوم اللي شكلها خشب ومن غير صيانة.',
-      desc_en: 'Heavy aluminium in every finish and colour, including wood-effect finishes with zero maintenance.',
+      id: 'alu', palette: 'alu', estimator: true, img: 'alu-black-villa',
+      name: 'برجولات ألومنيوم', name_en: 'Aluminium pergolas', short: 'ألومنيوم', short_en: 'Aluminium',
+      line: 'شرائح ثابتة أو متحركة · ضمان 25 سنة', line_en: 'Fixed or moving louvres · 25-year warranty',
       warranty: 'ضمان 25 سنة', warranty_en: '25-year warranty',
-      optionsLabel: 'نوع القطاع', optionsLabel_en: 'Profile',
+      optionsLabel: 'القطاع', optionsLabel_en: 'Profile',
       options: [
-        { id: 'alu-std', name: 'قطاع تقيل', name_en: 'Heavy profile', note: 'الأساسي', note_en: 'Standard', factor: 1 },
-        { id: 'alu-xl', name: 'قطاع تقيل جداً', name_en: 'Extra-heavy profile', note: 'للبحور الكبيرة والرياح', note_en: 'Long spans and wind', factor: 1.15 }
+        { id: 'alu-std', name: 'تقيل', name_en: 'Heavy', factor: 1 },
+        { id: 'alu-xl', name: 'تقيل جداً', name_en: 'Extra heavy', factor: 1.15 }
       ],
       types: [
-        { id: 'alu-fixed', name: 'سقف شرائح ثابتة', name_en: 'Fixed louvre roof', note: 'ضل دائم', note_en: 'Permanent shade', min: 4200, max: 5500, minTotal: 35000 },
-        { id: 'alu-manual', name: 'شرائح متحركة مانيوال', name_en: 'Manual adjustable louvres', note: 'تفتح وتقفل بذراع', note_en: 'Hand-crank opening', min: 6000, max: 7500, minTotal: 55000 },
-        { id: 'alu-auto', name: 'شرائح متحركة أوتوماتيك', name_en: 'Motorised louvres', note: 'موتور وريموت', note_en: 'Motor and remote', min: 7500, max: 9500, minTotal: 70000 },
-        { id: 'alu-enclosed', name: 'برجولة مقفلة بالكامل', name_en: 'Fully enclosed pergola', note: 'سقف وجوانب ألومنيوم وزجاج', note_en: 'Aluminium and glass all round', quote: true }
+        { id: 'alu-fixed', name: 'شرائح ثابتة', name_en: 'Fixed louvres', min: 4200, max: 5500, minTotal: 35000 },
+        { id: 'alu-manual', name: 'متحركة مانيوال', name_en: 'Manual louvres', min: 6000, max: 7500, minTotal: 55000 },
+        { id: 'alu-auto', name: 'متحركة أوتوماتيك', name_en: 'Motorised louvres', min: 7500, max: 9500, minTotal: 70000 },
+        { id: 'alu-enclosed', name: 'مقفلة بالكامل', name_en: 'Fully enclosed', quote: true }
       ]
     },
-    { id: 'glass', estimator: false, name: 'أعمال الزجاج', name_en: 'Glass works',
-      desc: 'تقفيلات وواجهات وأسقف زجاج، سيكوريت ودبل جلاس، بتركيب وتقفيل محكم.',
-      desc_en: 'Glass enclosures, facades and roofs in tempered and double glazing, sealed tight.' },
-    { id: 'aluminum', estimator: false, name: 'أعمال الألومنيوم', name_en: 'Aluminium works',
-      desc: 'كل أعمال الألومنيوم: شبابيك وأبواب سلايد ومفصلي وواجهات، بقطاعات وألوان مختلفة.',
-      desc_en: 'All aluminium works: sliding and hinged windows and doors and facades, in many profiles and colours.' },
-    { id: 'finishing', estimator: false, name: 'التشطيبات العامة', name_en: 'General finishing',
-      desc: 'تشطيب المساحات الخارجية والداخلية بالكامل: أرضيات، كهرباء، دهانات، وتجهيزات.',
-      desc_en: 'Complete indoor and outdoor finishing: flooring, electrics, paint and fit-out.' },
-    { id: 'cladding', estimator: false, name: 'أعمال الكلادينج', name_en: 'Cladding',
-      desc: 'تكسية واجهات وحوائط بألواح الكلادينج، بشكل عصري ومقاومة للعوامل الجوية.',
-      desc_en: 'Facade and wall cladding panels with a modern look that stands up to the weather.' }
+    { id: 'glass', name: 'أعمال الزجاج', name_en: 'Glass works' },
+    { id: 'aluminum', name: 'أعمال الألومنيوم', name_en: 'Aluminium works' },
+    { id: 'finishing', name: 'التشطيبات', name_en: 'Finishing' },
+    { id: 'cladding', name: 'الكلادينج', name_en: 'Cladding' }
   ],
 
-  /**
-   * الإضافات — متاحة مع كل أنواع البرجولات.
-   * perM2 = بيتضرب في مساحة البرجولة · fixed = سعر ثابت · من غير سعر = "حسب الاختيار"
-   * icon: roof | light | floor | sofa | star
-   */
-  addOnGroups: [
-    { icon: 'roof', name: 'السقف والتغطية', name_en: 'Roof & cover', items: [
-      { id: 'roof-acrylic', name: 'سقف أكريليك', name_en: 'Acrylic roof', perM2: 900 },
-      { id: 'roof-sandwich', name: 'سقف ساندوتش بانل', name_en: 'Sandwich-panel roof', perM2: 1100 },
-      { id: 'roof-tile', name: 'سقف قرميد بلاستيك', name_en: 'PVC roof tiles', perM2: 1000 }
-    ] },
-    { icon: 'light', name: 'كهرباء وإضاءة', name_en: 'Power & lighting', items: [
-      { id: 'lighting', name: 'إضاءة وكهرباء', name_en: 'Lighting and wiring', fixed: 7500 },
-      { id: 'ac', name: 'تكييف', name_en: 'Air conditioning' },
-      { id: 'tv', name: 'شاشة وتجهيزاتها', name_en: 'TV and mounting' }
-    ] },
-    { icon: 'floor', name: 'أرضيات وزرع', name_en: 'Flooring & planting', items: [
-      { id: 'floor', name: 'أرضية سيراميك أو رخام', name_en: 'Ceramic or marble floor', perM2: 1200 },
-      { id: 'plants', name: 'زرع طبيعي أو صناعي', name_en: 'Natural or artificial plants' }
-    ] },
-    { icon: 'sofa', name: 'الفرش', name_en: 'Furniture', items: [
-      { id: 'seating', name: 'جلسة خشب', name_en: 'Wooden seating' },
-      { id: 'table', name: 'ترابيزة أو سفرة', name_en: 'Coffee or dining table' },
-      { id: 'chairs', name: 'كراسي', name_en: 'Chairs' }
-    ] },
-    { icon: 'star', name: 'تجهيز كامل', name_en: 'Full fit-out', items: [
-      { id: 'full-fitout', name: 'تجهيزات وتشطيبات كاملة للمكان', name_en: 'Complete fit-out and finishing' }
-    ] }
+  /** الإضافات — perM2 بيتضرب في المساحة، fixed سعر ثابت، من غير سعر = حسب الاختيار */
+  addOns: [
+    { id: 'lighting', icon: 'light', name: 'إضاءة وكهرباء', name_en: 'Lighting', fixed: 7500 },
+    { id: 'roof-acrylic', icon: 'roof', name: 'سقف أكريليك', name_en: 'Acrylic roof', perM2: 900 },
+    { id: 'roof-sandwich', icon: 'roof', name: 'ساندوتش بانل', name_en: 'Sandwich panel', perM2: 1100 },
+    { id: 'roof-tile', icon: 'roof', name: 'قرميد', name_en: 'Roof tiles', perM2: 1000 },
+    { id: 'floor', icon: 'floor', name: 'سيراميك أو رخام', name_en: 'Tiles or marble', perM2: 1200 },
+    { id: 'plants', icon: 'leaf', name: 'زرع', name_en: 'Planting' },
+    { id: 'seating', icon: 'sofa', name: 'جلسة خشب', name_en: 'Seating' },
+    { id: 'table', icon: 'table', name: 'ترابيزة أو سفرة', name_en: 'Table' },
+    { id: 'ac', icon: 'ac', name: 'تكييف', name_en: 'A/C' },
+    { id: 'tv', icon: 'tv', name: 'شاشة', name_en: 'TV' },
+    { id: 'full-fitout', icon: 'star', name: 'تجهيز كامل', name_en: 'Full fit-out' }
   ],
 
-  /**
-   * صور الشغل الثابتة (بالإضافة لصور فولدر Drive).
-   * cat: wood | metal | alu | glass | aluminum | finishing | cladding
-   * kind: 'render' = تصميم 3D (مش مشروع منفّذ)
-   */
+  /** المعرض — img = اسم الصورة في images/p */
   gallery: [
-    { src: 'images/work/wood-pergola-rooftop.jpg', cat: 'wood', title: 'برجولة خشب بجوانب شرائح وإضاءة مخفية', title_en: 'Wood pergola with slatted sides and hidden lighting', place: 'رووف', place_en: 'Rooftop' },
-    { src: 'images/work/wood-pergola-lattice-green.jpg', cat: 'wood', title: 'برجولة خشب بجوانب شبك مدهونة أخضر زيتي', title_en: 'Olive-green wood pergola with lattice sides', place: 'جنينة فيلا', place_en: 'Villa garden' },
-    { src: 'images/work/wood-pergola-villa.jpg', cat: 'wood', title: 'برجولة خشب سقف شرايح بإضاءة LED', title_en: 'Slatted wood pergola with LED lighting', place: 'جنينة فيلا', place_en: 'Villa garden' },
-    { src: 'images/work/wood-gazebo-octagon.jpg', cat: 'wood', title: 'جازيبو خشب مثمن بجلسة مدمجة', title_en: 'Octagonal wood gazebo with built-in seating', place: 'كمبوند', place_en: 'Compound' },
-    { src: 'images/work/wood-pergola-rooftop-screens.jpg', cat: 'wood', title: 'برجولة خشب وسواتر شرائح', title_en: 'Wood pergola with slatted screens', place: 'رووف', place_en: 'Rooftop' },
-    { src: 'images/work/wood-gazebo-terrace.jpg', cat: 'wood', title: 'جازيبو خشب بسقف هرمي', title_en: 'Wood gazebo with pyramid roof', place: 'تراس فيلا', place_en: 'Villa terrace', kind: 'render' },
-    { src: 'images/work/wood-pergola-garden.jpg', cat: 'wood', title: 'برجولة خشب وجلسة خارجية', title_en: 'Wood pergola with outdoor lounge', place: 'جنينة', place_en: 'Garden', kind: 'render' }
+    { img: 'hero-rooftop-dusk', cat: 'wood', title: 'برجولة رووف بإضاءة مخفية', title_en: 'Rooftop pergola, hidden lighting' },
+    { img: 'alu-black-villa', cat: 'alu', title: 'ألومنيوم أسود بشرائح', title_en: 'Black aluminium louvres' },
+    { img: 'lattice-green-lounge', cat: 'wood', title: 'جلسة تحت برجولة خضرا', title_en: 'Lounge under a green pergola' },
+    { img: 'rooftop-lounge', cat: 'wood', title: 'رووف بسواتر شرائح', title_en: 'Rooftop with slatted screens' },
+    { img: 'wood-cube-garden', cat: 'wood', title: 'مكعب خشب في الجنينة', title_en: 'Garden wood cube' },
+    { img: 'steel-black-rooftop', cat: 'metal', title: 'حديد أسود على الرووف', title_en: 'Black steel rooftop pergola' },
+    { img: 'gazebo-terrace', cat: 'wood', title: 'جازيبو بسقف هرمي', title_en: 'Pyramid-roof gazebo' },
+    { img: 'glass-room', cat: 'glass', title: 'غرفة زجاج', title_en: 'Glass room' },
+    { img: 'wood-screens-terrace', cat: 'wood', title: 'برجولة بسواتر', title_en: 'Pergola with screens' },
+    { img: 'alu-white', cat: 'alu', title: 'ألومنيوم أبيض', title_en: 'White aluminium' },
+    { img: 'rooftop-lounge-inside', cat: 'wood', title: 'سقف شرايح بإضاءة', title_en: 'Lit slatted ceiling' },
+    { img: 'gazebo-octagon', cat: 'wood', title: 'جازيبو مثمن', title_en: 'Octagonal gazebo' },
+    { img: 'glass-pergola-garden', cat: 'glass', title: 'برجولة بتقفيل زجاج', title_en: 'Glass-enclosed pergola' },
+    { img: 'wood-black-corner', cat: 'metal', title: 'حديد وخشب', title_en: 'Steel and wood' },
+    { img: 'wood-cabin-green-wall', cat: 'wood', title: 'كابينة خشب بإضاءة', title_en: 'Lit wood cabin' },
+    { img: 'alu-black-louvre', cat: 'alu', title: 'شرائح ألومنيوم', title_en: 'Aluminium louvres' },
+    { img: 'lattice-green-1', cat: 'wood', title: 'برجولة شبك خضرا', title_en: 'Green lattice pergola' },
+    { img: 'wood-pergola-carved', cat: 'wood', title: 'تفاصيل محفورة', title_en: 'Carved details' },
+    { img: 'steel-wood-tv', cat: 'metal', title: 'جلسة بشاشة', title_en: 'Lounge with TV' },
+    { img: 'cladding-deck', cat: 'cladding', title: 'تكسية وديك خشب', title_en: 'Cladding and decking' },
+    { img: 'wood-pergola-marble', cat: 'wood', title: 'برجولة على رخام', title_en: 'Pergola on marble' },
+    { img: 'glass-box-pool', cat: 'glass', title: 'بوكس زجاج على البيسين', title_en: 'Glass box by the pool' },
+    { img: 'wood-lounge-blue', cat: 'wood', title: 'جلسة مقفولة جزئياً', title_en: 'Semi-enclosed lounge' },
+    { img: 'steel-frame-planters', cat: 'metal', title: 'حديد بأحواض زرع', title_en: 'Steel with planters' },
+    { img: 'wood-garden-lights', cat: 'wood', title: 'جنينة بالليل', title_en: 'Garden at night' },
+    { img: 'wood-rooftop-bar', cat: 'wood', title: 'بار على الرووف', title_en: 'Rooftop bar' },
+    { img: 'wood-swing-pergola', cat: 'wood', title: 'برجولة بمرجيحة', title_en: 'Pergola with swing' },
+    { img: 'gazebo-seating', cat: 'wood', title: 'جازيبو بجلسة مبنية', title_en: 'Gazebo with built-in seating' },
+    { img: 'wood-dining-white', cat: 'wood', title: 'سفرة خارجية', title_en: 'Outdoor dining' },
+    { img: 'cladding-room', cat: 'cladding', title: 'غرفة بتكسية خشب', title_en: 'Wood-clad room' },
+    { img: 'wood-pergola-grid', cat: 'wood', title: 'سقف شبكي', title_en: 'Grid roof' },
+    { img: 'wood-green-wall', cat: 'wood', title: 'جلسة بحيطة زرع', title_en: 'Lounge with green wall' },
+    { img: 'wood-pool-pergola', cat: 'wood', title: 'برجولة على البيسين', title_en: 'Poolside pergola' },
+    { img: 'wood-screens-sofa', cat: 'metal', title: 'إطار أسود وخشب', title_en: 'Black frame and wood' },
+    { img: 'wood-corner-sofa', cat: 'wood', title: 'زاوية جلوس', title_en: 'Corner lounge' },
+    { img: 'wood-stone-terrace', cat: 'wood', title: 'تراس حجر', title_en: 'Stone terrace' },
+    { img: 'wood-lattice-garden', cat: 'wood', title: 'برجولة بين الورد', title_en: 'Among the flowers' },
+    { img: 'wood-pergola-stairs', cat: 'wood', title: 'مدخل مغطى', title_en: 'Covered entrance' },
+    { img: 'wood-slatted-frame', cat: 'wood', title: 'هيكل شرايح', title_en: 'Slatted frame' },
+    { img: 'wood-lounge-lawn', cat: 'wood', title: 'جلسة على النجيلة', title_en: 'Lawn lounge' },
+    { img: 'wood-dining-pergola', cat: 'wood', title: 'سفرة في الجنينة', title_en: 'Garden dining' },
+    { img: 'wood-bar-pergola', cat: 'wood', title: 'ركن بار', title_en: 'Bar corner' },
+    { img: 'wood-pergola-turf', cat: 'wood', title: 'برجولة رووف', title_en: 'Rooftop pergola' },
+    { img: 'wood-pergola-deck-screen', cat: 'wood', title: 'ساتر وديك', title_en: 'Screen and deck' },
+    { img: 'wood-pergola-fence', cat: 'wood', title: 'برجولة سور', title_en: 'Fence-side pergola' },
+    { img: 'wood-balcony-pergola', cat: 'wood', title: 'برجولة بلكونة', title_en: 'Balcony pergola' },
+    { img: 'wood-pergola-garden-sunset', cat: 'wood', title: 'غروب في الجنينة', title_en: 'Garden sunset' },
+    { img: 'wood-lounge-pool', cat: 'wood', title: 'جلسة زجاج وخشب', title_en: 'Glass and wood lounge' },
+    { img: 'lattice-green-2', cat: 'wood', title: 'تفصيلة الشبك', title_en: 'Lattice detail' },
+    { img: 'steel-wood-slats', cat: 'metal', title: 'حديد بشرائح خشب', title_en: 'Steel with wood slats' },
+    { img: 'rooftop-pergola-front', cat: 'wood', title: 'برجولة رووف', title_en: 'Rooftop pergola' }
   ],
 
-  /** آراء العملاء — حقيقية فقط. القسم مش هيظهر طول ما القائمة فاضية. */
-  testimonials: [
-    // { name: 'م. أحمد', place: 'الشيخ زايد', text: '...', text_en: '...' },
-  ]
+  testimonials: []
 };

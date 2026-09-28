@@ -4,423 +4,286 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <title>Arcova NIT Studio</title>
-  <meta name="description" content="برجولات خشب وحديد وألومنيوم، أعمال زجاج وألومنيوم وتشطيبات. احسب تكلفة مشروعك في دقيقة واحجز معاينة مجانية مع Arcova NIT Studio.">
-  <meta name="theme-color" content="#0c0b09">
+  <meta name="description" content="برجولات خشب وحديد وألومنيوم — تصميم وتنفيذ. احسب السعر في دقيقة واحجز معاينة مجانية.">
+  <meta name="theme-color" content="#16120e">
   <meta property="og:type" content="website">
-  <meta property="og:title" content="Arcova NIT Studio — برجولات، زجاج وألومنيوم">
-  <meta property="og:description" content="احسب تكلفة برجولتك في دقيقة، واستلم عرض سعر مبدئي، واحجز معاينة مجانية.">
+  <meta property="og:title" content="Arcova NIT Studio">
+  <meta property="og:description" content="خلّي المساحة تحكي عنك. برجولات خشب وحديد وألومنيوم — احسب السعر في دقيقة.">
   <meta property="og:image" content="images/og-cover.jpg">
-  <meta property="og:locale" content="ar_EG">
-  <meta property="og:locale:alternate" content="en_US">
   <link rel="icon" type="image/png" href="images/favicon.png">
   <link rel="apple-touch-icon" href="images/apple-touch-icon.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans+Arabic:wght@300;400;500;600;700&family=Reem+Kufi:wght@500;600;700&display=swap">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Alexandria:wght@300;500;700;800&family=Cinzel:wght@500;600&family=IBM+Plex+Sans+Arabic:wght@400;500;600&display=swap">
   <link rel="stylesheet" href="assets/style.css">
 </head>
 <body>
-  <a class="skip" href="#main" data-i18n="skip">تخطي إلى المحتوى</a>
-
-  <!-- Language chooser (first visit only; ?lang=ar|en skips it) -->
-  <div class="lang-gate" id="langGate" hidden role="dialog" aria-modal="true" aria-labelledby="langGateTitle">
-    <div class="lang-card">
-      <img src="images/logo-512.png" alt="Arcova NIT Studio" width="160" height="160">
-      <p class="lang-title" id="langGateTitle">اختر اللغة <span>·</span> Choose your language</p>
-      <div class="lang-btns">
-        <button type="button" class="btn btn-gold" data-set-lang="ar">العربية</button>
-        <button type="button" class="btn btn-line" data-set-lang="en">English</button>
-      </div>
+  <!-- Language chooser (first visit; ?lang=ar|en skips it) -->
+  <div class="gate" id="langGate" hidden role="dialog" aria-modal="true" aria-label="Language">
+    <img src="images/logo-512.png" alt="Arcova NIT Studio" width="150" height="150">
+    <div class="gate-btns">
+      <button type="button" data-set-lang="ar">العربية</button>
+      <button type="button" data-set-lang="en" class="en">English</button>
     </div>
   </div>
 
-  <header class="site-head">
-    <div class="wrap head-row">
-      <a class="logo" href="#top" aria-label="Arcova NIT Studio">
-        <img src="images/logo-160.png" alt="" width="46" height="46">
-        <span class="logo-type"><b>ARCOVA</b><small>NIT STUDIO</small></span>
-      </a>
-      <nav class="nav" aria-label="Sections">
-        <a href="#services" data-i18n="nav.services">خدماتنا</a>
-        <a href="#addons" data-i18n="nav.addons">الإضافات</a>
-        <a href="#work" data-i18n="nav.work">شغلنا</a>
-        <a href="#pricing" data-i18n="nav.pricing">التسعير</a>
-        <a href="#estimate" data-i18n="nav.estimate">احسب التكلفة</a>
-      </nav>
-      <button type="button" class="lang-toggle" id="langToggle" aria-label="Switch language">EN</button>
-      <a class="btn btn-gold btn-small head-cta" href="#book" data-track="nav_book" data-i18n="cta.book">احجز معاينة</a>
-    </div>
+  <header class="head" id="head">
+    <a class="brand" href="#top" aria-label="Arcova NIT Studio">
+      <img src="images/logo-160.png" alt="" width="44" height="44">
+      <span><b>ARCOVA</b><small>NIT STUDIO</small></span>
+    </a>
+    <nav class="nav">
+      <a href="#types" data-i18n="nav.types">البرجولات</a>
+      <a href="#work" data-i18n="nav.work">شغلنا</a>
+      <a href="#price" data-i18n="nav.price">احسب السعر</a>
+    </nav>
+    <button type="button" class="lang" id="langToggle">EN</button>
+    <a class="btn btn-gold btn-sm" href="#price" data-i18n="cta.price">احسب السعر</a>
   </header>
 
   <main id="main">
     <!-- HERO -->
     <section class="hero" id="top">
-      <img class="hero-bg" src="images/work/wood-pergola-rooftop.jpg" alt="" width="1195" height="896" fetchpriority="high">
-      <div class="hero-shade" aria-hidden="true"></div>
-      <div class="wrap hero-inner">
-        <p class="eyebrow" data-i18n="hero.eyebrow">برجولات · زجاج · ألومنيوم · تشطيبات</p>
-        <h1 data-i18n-html="hero.title">مساحتك الخارجية،<br><em>متصممة بالسنتيمتر.</em></h1>
-        <p class="lead" data-i18n="hero.lead">برجولات خشب وحديد وألومنيوم للجنينة والرووف، وأعمال زجاج وألومنيوم وتشطيبات كاملة. بنقيس ونصمم وننفّذ بفريقنا، واحسب التكلفة التقريبية دلوقتي واستلم عرض سعر مبدئي فوراً.</p>
-        <div class="cta-row">
-          <a class="btn btn-gold" href="#estimate" data-track="hero_estimate" data-i18n="cta.estimate">احسب تكلفة مشروعك</a>
-          <a class="btn btn-line js-wa" href="#" data-track="hero_whatsapp" data-i18n="cta.whatsapp">كلّمنا واتساب</a>
+      <div class="hero-slides" id="heroSlides"></div>
+      <div class="hero-shade"></div>
+      <div class="hero-in">
+        <p class="kicker">PERGOLAS · GLASS · ALUMINIUM</p>
+        <h1 data-i18n-html="hero.h1">خلّي المساحة<br>تحكي عنك.</h1>
+        <p class="hero-sub" data-i18n="hero.sub">برجولات خشب وحديد وألومنيوم. تصميم وتنفيذ بفريقنا.</p>
+        <div class="row">
+          <a class="btn btn-gold" href="#price" data-track="hero_price" data-i18n="cta.priceLong">احسب سعر برجولتك</a>
+          <a class="btn btn-glass js-wa" href="#" data-track="hero_wa" data-i18n="cta.wa">واتساب</a>
         </div>
-        <ul class="stats" id="stats"></ul>
-        <div class="hero-dim" aria-hidden="true"><span>6.00 m</span></div>
       </div>
+      <div class="hero-dots" id="heroDots" aria-hidden="true"></div>
     </section>
 
-    <div class="promise-band">
-      <div class="wrap promise">
-        <div><strong data-i18n="promise.1t">معاينة مجانية</strong><span data-i18n="promise.1s">وقياس بالليزر في موقعك</span></div>
-        <div><strong data-i18n="promise.2t">تصميم 3D</strong><span data-i18n="promise.2s">تشوف الشكل قبل التنفيذ</span></div>
-        <div><strong data-i18n="promise.3t">عرض سعر فوري</strong><span data-i18n="promise.3s">مبدئي ومفصّل بند بند</span></div>
-        <div><strong data-i18n="promise.4t">ضمان 25 سنة</strong><span data-i18n="promise.4s">على برجولات الحديد والألومنيوم</span></div>
-      </div>
-    </div>
+    <ul class="trust">
+      <li><b data-i18n="t1">معاينة مجانية</b></li>
+      <li><b data-i18n="t2">تصميم 3D قبل التنفيذ</b></li>
+      <li><b data-i18n="t3">ضمان 25 سنة</b></li>
+      <li><b data-i18n="t4">تنفيذ بفريقنا</b></li>
+    </ul>
 
-    <!-- SERVICES -->
-    <section class="section" id="services">
+    <!-- TYPES -->
+    <section class="sec" id="types">
       <div class="wrap">
-        <div class="sec-head">
-          <p class="eyebrow" data-i18n="services.eyebrow">خدماتنا</p>
-          <h2 data-i18n="services.title">من البرجولة لتشطيب المكان كله.</h2>
-          <p data-i18n="services.lead">تلات أنواع برجولات، كل نوع بخاماته وأشكاله وألوانه. السعر المكتوب هو بداية سعر المتر المربع شامل التوريد والتركيب.</p>
-        </div>
-        <div class="services" id="servicesList"></div>
-        <div class="other-svc">
-          <h3 data-i18n="services.more">وكمان</h3>
-          <div class="other-list" id="otherList"></div>
+        <header class="sh">
+          <p class="kicker">01 — PERGOLAS</p>
+          <h2 data-i18n="types.h">اختار البرجولة.</h2>
+        </header>
+        <div class="types" id="typeCards"></div>
+        <div class="also">
+          <span data-i18n="types.also">وكمان</span>
+          <div id="alsoList"></div>
         </div>
       </div>
     </section>
 
-    <!-- ADD-ONS -->
-    <section class="section section-raised" id="addons">
-      <div class="wrap">
-        <div class="sec-head">
-          <p class="eyebrow" data-i18n="addons.eyebrow">الإضافات</p>
-          <h2 data-i18n="addons.title">كمّل الجلسة، من السقف للأرض.</h2>
-          <p data-i18n="addons.lead">كل الإضافات دي متاحة مع أي نوع برجولة، وبتختارها في الحاسبة وتظهر في عرض السعر.</p>
-        </div>
-        <div class="addon-cards" id="addonCards"></div>
+    <!-- STORY -->
+    <section class="sec sec-dark" id="story">
+      <div class="wrap story">
+        <header class="sh">
+          <p class="kicker">02 — FROM IDEA TO REALITY</p>
+          <h2 data-i18n="story.h">من الفكرة للحقيقة.</h2>
+          <p data-i18n="story.p">كل مشروع بيبدأ برسمة، وبيخلص بمساحة تعيش فيها.</p>
+          <div class="story-tabs" id="storyTabs" role="tablist"></div>
+        </header>
+        <div class="story-stage" id="storyStage"></div>
       </div>
     </section>
 
-    <!-- WORK / GALLERY -->
-    <section class="section" id="work">
+    <!-- WORK -->
+    <section class="sec" id="work">
       <div class="wrap">
-        <div class="sec-head">
-          <p class="eyebrow" data-i18n="work.eyebrow">شغلنا</p>
-          <h2 data-i18n="work.title">من شغلنا.</h2>
-          <p data-i18n="work.lead">اضغط على أي صورة لتكبيرها. الصور المكتوب عليها "تصميم 3D" تصميمات بنعملها للعميل قبل التنفيذ.</p>
-        </div>
-        <div class="filters" role="tablist" id="filters"></div>
-        <div class="gallery" id="gallery"></div>
-        <p class="gallery-empty" id="galleryEmpty" hidden data-i18n="work.empty">صور القسم ده هتنزل قريب. ابعتلنا على واتساب ونبعتلك مشاريع مشابهة.</p>
-        <div class="more-row"><button type="button" class="btn btn-line" id="galleryMore" hidden data-i18n="work.more">صور أكتر</button></div>
-      </div>
-    </section>
-
-    <!-- PRICING PRINCIPLE -->
-    <section class="section section-ivory" id="pricing">
-      <div class="wrap">
-        <div class="sec-head">
-          <p class="eyebrow" data-i18n="pricing.eyebrow">مبدأ التسعير</p>
-          <h2 data-i18n="pricing.title">سعر مفهوم، من أول رقم.</h2>
-          <p data-i18n="pricing.lead">مفيش "السعر بعد المعاينة" وخلاص. دي المعادلة اللي بنحسب بيها كل عرض سعر:</p>
-        </div>
-        <div class="formula">
-          <div class="f-term"><b data-i18n="f.area">المساحة</b><span data-i18n="f.areaS">طول × عرض بالمتر</span></div>
-          <i aria-hidden="true">×</i>
-          <div class="f-term"><b data-i18n="f.rate">سعر المتر</b><span data-i18n="f.rateS">حسب نوع البرجولة</span></div>
-          <i aria-hidden="true">×</i>
-          <div class="f-term"><b data-i18n="f.mat">الخامة</b><span data-i18n="f.matS">نوع الخشب، القطاع، الدهان</span></div>
-          <i aria-hidden="true">+</i>
-          <div class="f-term"><b data-i18n="f.add">الإضافات</b><span data-i18n="f.addS">سقف، إضاءة، أرضيات، فرش</span></div>
-          <i aria-hidden="true">=</i>
-          <div class="f-term f-result"><b data-i18n="f.res">عرض السعر</b><span data-i18n="f.resS">توريد + تركيب + ضمان</span></div>
-        </div>
-        <div class="tiers" id="priceTables"></div>
-        <p class="hint price-hint" data-i18n="pricing.hint">الأسعار بالجنيه المصري للمتر المربع، شاملة التوريد والتركيب. الغرف المقفولة بالكامل بتتسعر بعد ما نعرف تفاصيلها.</p>
-        <div class="includes">
+        <header class="sh sh-row">
           <div>
-            <h3 data-i18n="inc.t">السعر بيشمل</h3>
-            <ul class="check">
-              <li data-i18n="inc.1">المعاينة والقياس في الموقع</li>
-              <li data-i18n="inc.2">تصميم 3D ومراجعته معاك قبل التنفيذ</li>
-              <li data-i18n="inc.3">الخامات والقطاعات والإكسسوارات</li>
-              <li data-i18n="inc.4">النقل والتركيب والتنظيف بعد الشغل</li>
-              <li data-i18n="inc.5">ضمان مكتوب في العقد</li>
-            </ul>
+            <p class="kicker">03 — PORTFOLIO</p>
+            <h2 data-i18n="work.h">شغلنا.</h2>
           </div>
-          <div>
-            <h3 data-i18n="chg.t">إيه اللي بيغيّر السعر</h3>
-            <ul class="dash">
-              <li data-i18n="chg.1">الارتفاع لو أعلى من 3 متر، أو التركيب على دور عالي</li>
-              <li data-i18n="chg.2">نوع الأرضية وطريقة التثبيت</li>
-              <li data-i18n="chg.3">الأشكال غير المنتظمة والزوايا المائلة</li>
-              <li data-i18n="chg.4">لون خاص أو خامة مستوردة بالطلب</li>
-            </ul>
-          </div>
-          <div class="pay">
-            <h3 data-i18n="pay.t">نظام الدفع</h3>
-            <ol class="pay-steps">
-              <li><b>50%</b><span data-i18n="pay.1">عند التعاقد</span></li>
-              <li><b>40%</b><span data-i18n="pay.2">عند توريد الخامات للموقع</span></li>
-              <li><b>10%</b><span data-i18n="pay.3">بعد التسليم</span></li>
-            </ol>
-          </div>
-        </div>
+          <div class="filters" id="filters" role="tablist"></div>
+        </header>
+        <div class="grid" id="gallery"></div>
+        <div class="more"><button type="button" class="btn btn-line" id="galleryMore" data-i18n="work.more">صور أكتر</button></div>
       </div>
     </section>
 
-    <!-- ESTIMATOR -->
-    <section class="section" id="estimate">
+    <!-- CONFIGURATOR -->
+    <section class="sec sec-stone" id="price">
       <div class="wrap">
-        <div class="sec-head">
-          <p class="eyebrow" data-i18n="est.eyebrow">حاسبة التكلفة</p>
-          <h2 data-i18n="est.title">صمّم برجولتك واعرف التكلفة.</h2>
-          <p data-i18n="est.lead">اختار النوع والخامة واللون والمقاس والإضافات. بعد ما تسجل بياناتك هيوصلك عرض سعر مبدئي تقدر تنزله PDF.</p>
-        </div>
+        <header class="sh sh-center">
+          <p class="kicker">04 — ESTIMATE</p>
+          <h2 data-i18n="price.h">احسب السعر في دقيقة.</h2>
+          <p data-i18n="price.p">5 خطوات، وفي الآخر عرض سعر مبدئي باسمك.</p>
+        </header>
 
-        <form class="est" id="estForm" novalidate>
-          <div class="est-controls">
-            <fieldset>
-              <legend><span class="step">1</span> <span data-i18n="est.s1">نوع البرجولة</span></legend>
-              <div class="chips chips-cat" id="estCat"></div>
-              <div class="chips chips-svc" id="estType"></div>
-            </fieldset>
-            <fieldset>
-              <legend><span class="step">2</span> <span id="estOptLabel">الخامة</span></legend>
-              <div class="chips" id="estOpt"></div>
-            </fieldset>
-            <fieldset>
-              <legend><span class="step">3</span> <span data-i18n="est.s3">اللون</span> <small class="leg-val" id="estColorName"></small></legend>
-              <div class="swatches" id="estColor"></div>
-            </fieldset>
-            <fieldset>
-              <legend><span class="step">4</span> <span data-i18n="est.s4">المقاس التقريبي</span></legend>
-              <div class="size-row">
-                <label class="num">
-                  <span data-i18n="est.len">الطول</span>
-                  <span class="stepper">
-                    <button type="button" data-step="len" data-d="-0.5" aria-label="−">−</button>
-                    <input id="estLen" type="number" inputmode="decimal" min="1" max="30" step="0.5" value="5">
-                    <button type="button" data-step="len" data-d="0.5" aria-label="+">+</button>
-                  </span>
-                  <em data-i18n="est.m">متر</em>
-                </label>
-                <label class="num">
-                  <span data-i18n="est.wid">العرض</span>
-                  <span class="stepper">
-                    <button type="button" data-step="wid" data-d="-0.5" aria-label="−">−</button>
-                    <input id="estWid" type="number" inputmode="decimal" min="1" max="30" step="0.5" value="4">
-                    <button type="button" data-step="wid" data-d="0.5" aria-label="+">+</button>
-                  </span>
-                  <em data-i18n="est.m">متر</em>
-                </label>
+        <div class="wiz" id="wiz">
+          <ol class="wiz-steps" id="wizSteps">
+            <li data-step="1"><span>1</span><em data-i18n="s1">النوع</em></li>
+            <li data-step="2"><span>2</span><em data-i18n="s2">الخامة واللون</em></li>
+            <li data-step="3"><span>3</span><em data-i18n="s3">المقاس</em></li>
+            <li data-step="4"><span>4</span><em data-i18n="s4">الإضافات</em></li>
+            <li data-step="5"><span>5</span><em data-i18n="s5">بياناتك</em></li>
+          </ol>
+
+          <div class="wiz-body">
+            <form class="wiz-panels" id="wizForm" novalidate>
+              <!-- 1 -->
+              <fieldset class="panel" data-panel="1">
+                <legend data-i18n="p1">نوع البرجولة</legend>
+                <div class="cat-picks" id="catPicks"></div>
+                <div class="chips" id="typePicks"></div>
+              </fieldset>
+              <!-- 2 -->
+              <fieldset class="panel" data-panel="2" hidden>
+                <legend id="optLegend">الخامة</legend>
+                <div class="chips" id="optPicks"></div>
+                <p class="lbl"><span data-i18n="color">اللون</span> <b id="colorName"></b></p>
+                <div class="swatches" id="colorPicks"></div>
+              </fieldset>
+              <!-- 3 -->
+              <fieldset class="panel" data-panel="3" hidden>
+                <legend data-i18n="p3">المقاس التقريبي</legend>
+                <div class="size">
+                  <div class="size-in">
+                    <label class="range"><span data-i18n="len">الطول</span><output id="lenOut">5 م</output>
+                      <input type="range" id="len" min="2" max="15" step="0.5" value="5"></label>
+                    <label class="range"><span data-i18n="wid">العرض</span><output id="widOut">4 م</output>
+                      <input type="range" id="wid" min="2" max="12" step="0.5" value="4"></label>
+                    <p class="note" data-i18n="sizeNote">تقريبي كفاية — بنقيس بالظبط في المعاينة.</p>
+                  </div>
+                  <svg class="plan" id="plan" direction="ltr" viewBox="0 0 300 220" role="img" aria-label="Plan"></svg>
+                </div>
+              </fieldset>
+              <!-- 4 -->
+              <fieldset class="panel" data-panel="4" hidden>
+                <legend data-i18n="p4">إضافات تحبها؟</legend>
+                <div class="addons" id="addonPicks"></div>
+              </fieldset>
+              <!-- 5 -->
+              <fieldset class="panel" data-panel="5" hidden>
+                <legend data-i18n="p5">عرض السعر هيوصلك باسمك</legend>
+                <div class="fields">
+                  <label class="f"><span data-i18n="f.name">الاسم</span><input id="fName" autocomplete="name" required></label>
+                  <label class="f"><span data-i18n="f.phone">موبايل / واتساب</span><input id="fPhone" type="tel" inputmode="tel" autocomplete="tel" dir="ltr" placeholder="01xxxxxxxxx" required></label>
+                  <label class="f"><span data-i18n="f.area">المنطقة</span><input id="fArea" list="areas" required data-i18n-ph="f.areaP" placeholder="التجمع، زايد، أكتوبر…"></label>
+                  <label class="f"><span data-i18n="f.photo">صورة للمكان (اختياري)</span><input id="fPhoto" type="file" accept="image/*"></label>
+                  <label class="f f-wide"><span data-i18n="f.notes">ملاحظات (اختياري)</span><input id="fNotes"></label>
+                  <input class="hp" id="fWebsite" tabindex="-1" autocomplete="off" aria-hidden="true">
+                </div>
+                <datalist id="areas">
+                  <option value="التجمع الخامس"></option><option value="الشيخ زايد"></option><option value="6 أكتوبر"></option>
+                  <option value="مدينتي"></option><option value="الشروق"></option><option value="العاصمة الإدارية"></option>
+                  <option value="المعادي"></option><option value="الساحل الشمالي"></option><option value="الإسكندرية"></option>
+                </datalist>
+                <p class="err" id="formErr" role="status" hidden></p>
+              </fieldset>
+
+              <div class="wiz-nav">
+                <button type="button" class="btn btn-line" id="wizBack" data-i18n="back">رجوع</button>
+                <button type="button" class="btn btn-dark" id="wizNext" data-i18n="next">التالي</button>
+                <button type="submit" class="btn btn-gold" id="wizSubmit" hidden data-i18n="submit">استلم عرض السعر</button>
               </div>
-              <p class="hint" data-i18n="est.sizeHint">مش متأكد؟ سيبه تقريبي، هنقيس بالظبط في المعاينة.</p>
-            </fieldset>
-            <fieldset>
-              <legend><span class="step">5</span> <span data-i18n="est.s5">الإضافات</span></legend>
-              <div class="addon-groups" id="estAddons"></div>
-            </fieldset>
-          </div>
+            </form>
 
-          <aside class="est-result" aria-live="polite">
-            <div class="plan">
-              <p class="plan-label" data-i18n="est.plan">مسقط أفقي</p>
-              <svg id="planSvg" direction="ltr" viewBox="0 0 320 240" role="img" aria-label="Plan"></svg>
-            </div>
-            <dl class="sum">
-              <div><dt data-i18n="sum.svc">البرجولة</dt><dd id="sumService">—</dd></div>
-              <div><dt id="sumOptLabel">الخامة</dt><dd id="sumOpt">—</dd></div>
-              <div><dt data-i18n="sum.color">اللون</dt><dd id="sumColor">—</dd></div>
-              <div><dt data-i18n="sum.area">المساحة</dt><dd id="sumArea">—</dd></div>
-              <div id="sumAddRow" hidden><dt data-i18n="sum.adds">الإضافات</dt><dd id="sumAdds">—</dd></div>
-            </dl>
-            <div class="price">
-              <span data-i18n="sum.price">التكلفة التقريبية</span>
-              <strong id="sumPrice">—</strong>
-              <small id="sumPriceNote"></small>
-            </div>
-            <a class="btn btn-gold btn-block" href="#book" id="estToBook" data-track="estimate_to_book" data-i18n="est.toBook">استلم عرض السعر واحجز معاينة</a>
-            <a class="btn btn-line btn-block js-wa-est" href="#" data-track="estimate_whatsapp" data-i18n="est.toWa">ابعته على واتساب</a>
-          </aside>
-        </form>
+            <aside class="ticket" aria-live="polite">
+              <img id="tImg" src="images/p/hero-rooftop-dusk-s.jpg" alt="">
+              <div class="ticket-in">
+                <p class="t-type" id="tType">—</p>
+                <p class="t-meta" id="tMeta">—</p>
+                <p class="t-label" data-i18n="est">التكلفة التقريبية</p>
+                <p class="t-price" id="tPrice">—</p>
+                <p class="t-note" id="tNote"></p>
+                <p class="t-how" data-i18n="how">السعر = المساحة × سعر المتر للنوع والخامة + الإضافات</p>
+              </div>
+            </aside>
+          </div>
+        </div>
+
+        <div class="done" id="done" hidden>
+          <p class="kicker">✓ RECEIVED</p>
+          <h3><span data-i18n="done.h">وصلنا يا</span> <span id="doneName"></span>.</h3>
+          <p id="doneText" data-i18n="done.p">هنكلمك خلال 24 ساعة نحدد ميعاد المعاينة.</p>
+          <div class="row">
+            <button type="button" class="btn btn-gold" id="openQuote" data-i18n="done.quote">اعرض عرض السعر</button>
+            <a class="btn btn-line js-wa-done" href="#" data-i18n="cta.wa">واتساب</a>
+          </div>
+        </div>
       </div>
     </section>
 
     <!-- PROCESS -->
-    <section class="section section-raised" id="process">
+    <section class="sec">
       <div class="wrap">
-        <div class="sec-head">
-          <p class="eyebrow" data-i18n="proc.eyebrow">خطوات الشغل</p>
-          <h2 data-i18n="proc.title">من أول مكالمة لحد التسليم.</h2>
-        </div>
-        <ol class="process">
-          <li><b data-i18n="proc.1t">تقدير وعرض سعر مبدئي</b><span data-i18n="proc.1s">من الحاسبة هنا أو في مكالمة، في نفس اليوم.</span></li>
-          <li><b data-i18n="proc.2t">معاينة وقياس</b><span data-i18n="proc.2s">مهندس بيزور المكان ويقيس بالليزر ويشوف التثبيت.</span></li>
-          <li><b data-i18n="proc.3t">تصميم 3D وعرض نهائي</b><span data-i18n="proc.3s">تشوف الشكل قبل التنفيذ، والسعر مكتوب ومفصّل.</span></li>
-          <li><b data-i18n="proc.4t">تعاقد وتصنيع</b><span data-i18n="proc.4s">جدول زمني واضح والتصنيع في الورشة بالمقاسات.</span></li>
-          <li><b data-i18n="proc.5t">تركيب وتسليم</b><span data-i18n="proc.5s">تركيب نظيف، استلام بند بند، وضمان مكتوب.</span></li>
+        <header class="sh">
+          <p class="kicker">05 — PROCESS</p>
+          <h2 data-i18n="proc.h">4 خطوات وبس.</h2>
+        </header>
+        <ol class="steps">
+          <li><b data-i18n="proc.1">معاينة</b><span data-i18n="proc.1s">مجانية، وقياس بالليزر</span></li>
+          <li><b data-i18n="proc.2">تصميم 3D</b><span data-i18n="proc.2s">تشوفها قبل ما تتنفذ</span></li>
+          <li><b data-i18n="proc.3">تنفيذ</b><span data-i18n="proc.3s">في ورشتنا وبفريقنا</span></li>
+          <li><b data-i18n="proc.4">تسليم وضمان</b><span data-i18n="proc.4s">لحد 25 سنة</span></li>
         </ol>
       </div>
     </section>
 
-    <!-- TESTIMONIALS (hidden when empty) -->
-    <section class="section" id="reviews" hidden>
-      <div class="wrap">
-        <div class="sec-head">
-          <p class="eyebrow" data-i18n="rev.eyebrow">عملاؤنا</p>
-          <h2 data-i18n="rev.title">قالوا عن Arcova.</h2>
-        </div>
-        <div class="reviews" id="reviewsList"></div>
-      </div>
-    </section>
-
     <!-- FAQ -->
-    <section class="section" id="faq">
-      <div class="wrap faq-grid">
-        <div class="sec-head">
-          <p class="eyebrow" data-i18n="faq.eyebrow">أسئلة متكررة</p>
-          <h2 data-i18n="faq.title">قبل ما تسأل.</h2>
-          <p data-i18n="faq.lead">لو سؤالك مش هنا، ابعته على واتساب وهنرد عليك.</p>
-        </div>
+    <section class="sec sec-stone">
+      <div class="wrap faq-wrap">
+        <header class="sh">
+          <p class="kicker">06 — FAQ</p>
+          <h2 data-i18n="faq.h">أسئلة سريعة.</h2>
+        </header>
         <div class="faq">
-          <details><summary data-i18n="faq.1q">المعاينة مجانية فعلاً؟</summary><p data-i18n="faq.1a">أيوه، المعاينة والقياس مجانيين داخل القاهرة الكبرى. خارجها بنتفق على مصاريف انتقال بتتخصم من قيمة التعاقد.</p></details>
-          <details><summary data-i18n="faq.2q">عرض السعر اللي بيطلعلي من الموقع نهائي؟</summary><p data-i18n="faq.2a">ده عرض مبدئي بالأسعار الحالية ومبني على المقاس اللي كتبته. السعر النهائي بيتثبت بعد المعاينة والقياس، وغالباً بيكون في نفس النطاق.</p></details>
-          <details><summary data-i18n="faq.3q">التنفيذ بياخد قد إيه؟</summary><p data-i18n="faq.3a">البرجولة الخشب أو الحديد من 10 لـ 20 يوم عمل من التعاقد. الألومنيوم المتحرك والغرف المقفولة من 3 لـ 5 أسابيع حسب توفر القطاعات.</p></details>
-          <details><summary data-i18n="faq.4q">الخشب بيستحمل الشمس والمطر؟</summary><p data-i18n="faq.4a">بنشتغل خشب موسكي سويدي أو بيتش باين، معالج ضد الرطوبة والحشرات ومدهون بطبقات حماية خارجية. ولو عايز شكل الخشب من غير صيانة خالص، الخشمونيوم (ألومنيوم بلون الخشب) هو الحل.</p></details>
-          <details><summary data-i18n="faq.5q">ينفع أختار أي لون؟</summary><p data-i18n="faq.5a">أيوه. في الحاسبة ألوان جاهزة لكل نوع، وأي لون تاني بنعمله بالطلب. الحديد والألومنيوم دهان إلكتروستاتيك بأي درجة، والخشب بألوان الاستين أو الدهان.</p></details>
-          <details><summary data-i18n="faq.6q">الضمان بيغطي إيه؟</summary><p data-i18n="faq.6a">برجولات الحديد المدهون إلكتروستاتيك والألومنيوم عليها ضمان 25 سنة. باقي الأعمال ضمانها بيتكتب في العقد حسب نوع الشغل.</p></details>
+          <details><summary data-i18n="q1">المعاينة ببلاش؟</summary><p data-i18n="a1">أيوه، في القاهرة الكبرى.</p></details>
+          <details><summary data-i18n="q2">السعر اللي بيطلع نهائي؟</summary><p data-i18n="a2">مبدئي. بيتثبت بعد القياس، وغالباً في نفس النطاق.</p></details>
+          <details><summary data-i18n="q3">التنفيذ بياخد قد إيه؟</summary><p data-i18n="a3">خشب أو حديد: 10–20 يوم. ألومنيوم متحرك: 3–5 أسابيع.</p></details>
+          <details><summary data-i18n="q4">أي لون ينفع؟</summary><p data-i18n="a4">أيوه، أي لون بالطلب.</p></details>
         </div>
       </div>
     </section>
 
-    <!-- BOOKING FORM -->
-    <section class="section section-raised book" id="book">
-      <div class="wrap book-grid">
-        <div class="book-copy">
-          <p class="eyebrow" data-i18n="book.eyebrow">احجز معاينتك</p>
-          <h2 data-i18n="book.title">سيب بياناتك، واستلم عرض السعر فوراً.</h2>
-          <p data-i18n="book.lead">هيظهرلك عرض سعر مبدئي بكل اختياراتك تقدر تنزله PDF، ومهندس هيكلمك خلال 24 ساعة لتأكيد ميعاد المعاينة.</p>
-          <div class="book-direct">
-            <span data-i18n="book.direct">أو كلّمنا مباشرة</span>
-            <a class="phone js-phone" href="#" dir="ltr"></a>
-          </div>
+    <!-- FINAL CTA -->
+    <section class="final">
+      <img src="images/p/rooftop-lounge-s.jpg" alt="" loading="lazy">
+      <div class="final-in">
+        <h2 data-i18n="final.h">جاهز نبدأ؟</h2>
+        <div class="row">
+          <a class="btn btn-gold" href="#price" data-i18n="cta.priceLong">احسب سعر برجولتك</a>
+          <a class="btn btn-glass js-wa" href="#" data-track="final_wa" data-i18n="cta.wa">واتساب</a>
         </div>
-
-        <form class="lead-form" id="leadForm" novalidate>
-          <div class="field">
-            <label for="fName" data-i18n="form.name">الاسم</label>
-            <input id="fName" name="name" autocomplete="name" required data-i18n-ph="form.nameP" placeholder="اسمك">
-          </div>
-          <div class="field">
-            <label for="fPhone" data-i18n="form.phone">رقم الموبايل (واتساب)</label>
-            <input id="fPhone" name="phone" type="tel" inputmode="tel" autocomplete="tel" dir="ltr" required placeholder="01xxxxxxxxx">
-            <p class="err" id="phoneErr" hidden data-i18n="form.phoneErr">اكتب رقم موبايل مصري صحيح، مثال 01012345678</p>
-          </div>
-          <div class="field">
-            <label for="fLocation" data-i18n="form.area">المنطقة</label>
-            <input id="fLocation" name="location" list="areas" required data-i18n-ph="form.areaP" placeholder="مثال: التجمع الخامس">
-            <datalist id="areas">
-              <option value="التجمع الخامس"></option><option value="الشيخ زايد"></option><option value="6 أكتوبر"></option>
-              <option value="مدينتي"></option><option value="الشروق"></option><option value="العاصمة الإدارية"></option>
-              <option value="المعادي"></option><option value="مصر الجديدة"></option><option value="الساحل الشمالي"></option>
-              <option value="العين السخنة"></option><option value="الإسكندرية"></option>
-            </datalist>
-          </div>
-          <div class="field">
-            <label for="fService" data-i18n="form.project">نوع المشروع</label>
-            <select id="fService" name="project" required></select>
-          </div>
-          <div class="field">
-            <label for="fTime" data-i18n="form.time">أنسب وقت نكلمك فيه</label>
-            <select id="fTime" name="contactTime">
-              <option value="any" data-i18n="form.t0">أي وقت</option>
-              <option value="morning" data-i18n="form.t1">الصبح (10 - 1)</option>
-              <option value="afternoon" data-i18n="form.t2">بعد الظهر (1 - 5)</option>
-              <option value="evening" data-i18n="form.t3">بالليل (5 - 9)</option>
-            </select>
-          </div>
-          <div class="field">
-            <label for="fPhoto"><span data-i18n="form.photo">صورة للمكان</span> <em data-i18n="form.opt">اختياري</em></label>
-            <input id="fPhoto" name="photo" type="file" accept="image/*">
-          </div>
-          <div class="field field-wide">
-            <label for="fNotes"><span data-i18n="form.notes">ملاحظات</span> <em data-i18n="form.opt">اختياري</em></label>
-            <textarea id="fNotes" name="notes" rows="3" data-i18n-ph="form.notesP" placeholder="مثال: رووف دور خامس، عايز سقف يتقفل وقت المطر"></textarea>
-          </div>
-          <div class="hp" aria-hidden="true"><label for="fWebsite">Website</label><input id="fWebsite" name="website" tabindex="-1" autocomplete="off"></div>
-
-          <div class="lead-est field-wide" id="leadEst">
-            <span data-i18n="form.attached">التقدير المرفق</span>
-            <b id="leadEstText">—</b>
-          </div>
-
-          <button class="btn btn-gold btn-block field-wide" type="submit" id="leadSubmit" data-i18n="form.submit">أرسل واستلم عرض السعر</button>
-          <p class="fine field-wide" data-i18n="form.fine">بياناتك بتستخدم للتواصل بخصوص مشروعك فقط.</p>
-          <p class="form-msg field-wide" id="formMsg" role="status" hidden></p>
-        </form>
-
-        <div class="thanks" id="thanks" hidden>
-          <p class="eyebrow" data-i18n="thanks.eyebrow">تم استلام طلبك</p>
-          <h2><span data-i18n="thanks.hi">شكراً،</span> <span id="thanksName"></span>.</h2>
-          <p id="thanksText" data-i18n="thanks.text">فريق Arcova هيكلمك خلال 24 ساعة لتأكيد ميعاد المعاينة. عرض السعر المبدئي بتاعك جاهز.</p>
-          <div class="cta-row">
-            <button type="button" class="btn btn-gold" id="openQuote" data-i18n="thanks.quote">اعرض عرض السعر</button>
-            <a class="btn btn-line js-wa-thanks" href="#" data-track="thanks_whatsapp" data-i18n="thanks.wa">كمّل على واتساب</a>
-          </div>
-        </div>
+        <a class="phone js-phone" href="#" dir="ltr"></a>
       </div>
     </section>
   </main>
 
-  <footer class="site-foot">
-    <div class="wrap foot-row">
-      <div class="foot-brand">
-        <img src="images/logo-160.png" alt="Arcova NIT Studio" width="72" height="72">
-        <div>
-          <b class="foot-logo">ARCOVA NIT STUDIO</b>
-          <p data-i18n="foot.about">برجولات خشب وحديد وألومنيوم، أعمال الزجاج والألومنيوم، التشطيبات والكلادينج.</p>
-          <p class="foot-tag">FIRST AT THE FINISH LINE</p>
-        </div>
-      </div>
-      <div class="foot-links" id="footLinks"></div>
-      <p class="copy">© <span id="year"></span> Arcova NIT Studio</p>
-    </div>
+  <footer class="foot">
+    <img src="images/logo-160.png" alt="Arcova NIT Studio" width="64" height="64">
+    <p class="foot-tag">FIRST AT THE FINISH LINE</p>
+    <div class="foot-links" id="footLinks"></div>
+    <p class="copy">© <span id="year"></span> Arcova NIT Studio</p>
   </footer>
 
-  <div class="mbar" id="mbar">
-    <a class="btn btn-gold btn-small" href="#estimate" data-track="mbar_estimate" data-i18n="cta.estimateShort">احسب التكلفة</a>
-    <a class="btn btn-small btn-wa js-wa" href="#" data-track="mbar_whatsapp" data-i18n="cta.wa">واتساب</a>
+  <div class="mbar">
+    <a class="btn btn-gold" href="#price" data-i18n="cta.price">احسب السعر</a>
+    <a class="btn btn-wa js-wa" href="#" data-track="mbar_wa" data-i18n="cta.wa">واتساب</a>
   </div>
 
-  <a class="wa-float js-wa" href="#" aria-label="WhatsApp" data-track="float_whatsapp">
-    <svg viewBox="0 0 32 32" aria-hidden="true"><path fill="currentColor" d="M16 3a13 13 0 0 0-11.2 19.6L3 29l6.6-1.7A13 13 0 1 0 16 3zm0 23.6c-2 0-3.9-.5-5.5-1.5l-.4-.2-3.9 1 1-3.8-.3-.4A10.6 10.6 0 1 1 16 26.6zm5.8-7.9c-.3-.2-1.9-.9-2.2-1-.3-.1-.5-.2-.7.2l-1 1.2c-.2.2-.4.2-.7.1a8.7 8.7 0 0 1-4.3-3.8c-.3-.6.3-.5.9-1.7.1-.2 0-.4 0-.6l-1-2.4c-.3-.6-.5-.5-.7-.5h-.6c-.2 0-.6.1-.9.4-.3.3-1.2 1.1-1.2 2.8s1.2 3.2 1.4 3.4c.2.2 2.4 3.7 5.8 5.2 2.2.9 3 1 4.1.8.7-.1 1.9-.8 2.2-1.5.3-.8.3-1.4.2-1.5-.1-.1-.3-.2-.6-.3z"/></svg>
-  </a>
-
-  <div class="lightbox" id="lightbox" hidden role="dialog" aria-modal="true">
-    <button type="button" class="lb-close" id="lbClose" aria-label="Close">×</button>
+  <div class="lb" id="lb" hidden role="dialog" aria-modal="true">
+    <button type="button" class="lb-x" id="lbX" aria-label="Close">×</button>
     <button type="button" class="lb-nav lb-prev" id="lbPrev" aria-label="Previous">‹</button>
     <figure><img id="lbImg" alt=""><figcaption id="lbCap"></figcaption></figure>
     <button type="button" class="lb-nav lb-next" id="lbNext" aria-label="Next">›</button>
   </div>
 
-  <!-- Quote document (shown after the lead is saved) -->
-  <div class="quote-modal" id="quoteModal" hidden role="dialog" aria-modal="true" aria-labelledby="qTitle">
-    <div class="quote-bar">
-      <button type="button" class="btn btn-gold btn-small" id="qPdf" data-i18n="q.pdf">تحميل PDF</button>
-      <a class="btn btn-small btn-wa" id="qWa" href="#" target="_blank" rel="noopener" data-i18n="q.wa">ابعته واتساب</a>
-      <button type="button" class="btn btn-line btn-small" id="qPrint" data-i18n="q.print">طباعة</button>
-      <button type="button" class="q-close" id="qClose" aria-label="Close">×</button>
+  <div class="qm" id="quoteModal" hidden role="dialog" aria-modal="true">
+    <div class="qm-bar">
+      <button type="button" class="btn btn-gold btn-sm" id="qPdf" data-i18n="q.pdf">تحميل PDF</button>
+      <a class="btn btn-wa btn-sm" id="qWa" href="#" target="_blank" rel="noopener" data-i18n="q.wa">ابعته واتساب</a>
+      <button type="button" class="qm-x" id="qClose" aria-label="Close">×</button>
     </div>
-    <div class="quote-scroll">
-      <article class="quote-doc" id="quoteDoc"></article>
-    </div>
+    <div class="qm-scroll"><article class="qdoc" id="quoteDoc"></article></div>
   </div>
 
   <script src="config.js"></script>
