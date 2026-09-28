@@ -21,7 +21,7 @@ window.ARCOVA = {
   tracking: { metaPixelId: '', ga4Id: '', googleAdsId: '', googleAdsLeadLabel: '', tiktokPixelId: '' },
 
   /** صور الهيرو (بتتبدل كل كام ثانية) */
-  hero: ['hero-rooftop-dusk', 'alu-black-villa', 'lattice-green-lounge', 'gazebo-terrace', 'wood-cube-garden'],
+  hero: ['hero-rooftop-dusk', 'pool-lounge-dusk', 'alu-black-villa', 'lattice-green-lounge', 'gazebo-terrace', 'wood-cube-garden'],
 
   /** من الفكرة للحقيقة — نفس المشروع في 3 مراحل */
   story: [
@@ -135,6 +135,27 @@ window.ARCOVA = {
     { img: 'hero-rooftop-dusk', cat: 'wood', title: 'برجولة رووف بإضاءة مخفية', title_en: 'Rooftop pergola, hidden lighting' },
     { img: 'alu-black-villa', cat: 'alu', title: 'ألومنيوم أسود بشرائح', title_en: 'Black aluminium louvres' },
     { img: 'lattice-green-lounge', cat: 'wood', title: 'جلسة تحت برجولة خضرا', title_en: 'Lounge under a green pergola' },
+    { img: 'pool-lounge-dusk', cat: 'wood', title: 'برجولة وجلسة على البيسين', title_en: 'Pergola lounge by the pool' },
+    { img: 'villa-pool-kitchen', cat: 'wood', title: 'مطبخ خارجي تحت برجولة', title_en: 'Outdoor kitchen under a pergola' },
+    { img: 'villa-pergola-garden-v', cat: 'wood', title: 'برجولة فيلا بجلسة كاملة', title_en: 'Villa pergola lounge' },
+    { img: 'villa-slatted-deck', cat: 'wood', title: 'سواتر شرايح وديك خشب', title_en: 'Slatted screens and wood deck' },
+    { img: 'villa-pool-night', cat: 'wood', title: 'برجولة البيسين بالليل', title_en: 'Poolside pergola at night' },
+    { img: 'villa-pergola-stone-v', cat: 'wood', title: 'برجولة ممتدة على البيسين', title_en: 'Long poolside pergola' },
+    { img: 'villa-pool-dining', cat: 'wood', title: 'سفرة على البيسين', title_en: 'Poolside dining' },
+    { img: 'villa-pergola-columns', cat: 'wood', title: 'برجولة بأعمدة كلاسيك', title_en: 'Pergola with classic columns' },
+    { img: 'villa-pergola-pool-v', cat: 'wood', title: 'برجولة على البيسين', title_en: 'Pergola over the pool' },
+    { img: 'villa-pergola-dining', cat: 'wood', title: 'سفرة تحت البرجولة', title_en: 'Dining under the pergola' },
+    { img: 'villa-pergola-kitchen', cat: 'wood', title: 'برجولة ومطبخ', title_en: 'Pergola and kitchen' },
+    { img: 'villa-pool-sunset-v', cat: 'wood', title: 'غروب على البيسين', title_en: 'Pool at sunset' },
+    { img: 'villa-pergola-poolside', cat: 'wood', title: 'برجولة جنب البيسين', title_en: 'Poolside pergola' },
+    { img: 'villa-pergola-terrace', cat: 'wood', title: 'تراس مغطى', title_en: 'Covered terrace' },
+    { img: 'villa-pool-dusk', cat: 'wood', title: 'البيسين وقت المغرب', title_en: 'Pool at dusk' },
+    { img: 'villa-pergola-garden', cat: 'wood', title: 'برجولة في الجنينة', title_en: 'Garden pergola' },
+    { img: 'villa-pergola-pool', cat: 'wood', title: 'برجولة وبيسين', title_en: 'Pergola and pool' },
+    { img: 'villa-pool-dining-v', cat: 'wood', title: 'سفرة وبيسين', title_en: 'Dining and pool' },
+    { img: 'villa-pergola-poolside-v', cat: 'wood', title: 'برجولة البيسين', title_en: 'Pool pergola' },
+    { img: 'villa-pergola-dining-v', cat: 'wood', title: 'سفرة خشب', title_en: 'Wooden dining' },
+    { img: 'villa-pergola-columns-v', cat: 'wood', title: 'أعمدة وخشب', title_en: 'Columns and wood' },
     { img: 'rooftop-lounge', cat: 'wood', title: 'رووف بسواتر شرائح', title_en: 'Rooftop with slatted screens' },
     { img: 'wood-cube-garden', cat: 'wood', title: 'مكعب خشب في الجنينة', title_en: 'Garden wood cube' },
     { img: 'steel-black-rooftop', cat: 'metal', title: 'حديد أسود على الرووف', title_en: 'Black steel rooftop pergola' },
