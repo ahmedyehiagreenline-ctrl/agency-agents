@@ -473,6 +473,7 @@
     var apply = function (item) {
       var p = map[item.id]; if (!p) return;
       ['min', 'max', 'minTotal', 'fixed', 'perM2', 'factor'].forEach(function (f) { var v = parseFloat(p[f]); if (isFinite(v) && v >= 0) item[f] = v; });
+      if (item.quote && item.min > 0 && item.max > 0) item.quote = false; // a priced 'on request' type becomes calculable
     };
     EST.forEach(function (c) { c.types.forEach(apply); c.options.forEach(apply); });
     C.addOns.forEach(apply);
