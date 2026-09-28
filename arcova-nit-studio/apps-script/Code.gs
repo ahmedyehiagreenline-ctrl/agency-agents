@@ -357,9 +357,10 @@ function buildQuotePdf_(data) {
       '</tr></table>' +
       (items ? '<table style="margin-top:18px;"><tr style="background:#efe7d8;color:#6d6555;">' +
         '<th style="padding:8px;">' + e(q.head[0]) + '</th><th style="padding:8px;">' + e(q.head[1]) + '</th><th style="padding:8px;text-align:' + end + ';">' + e(q.head[2]) + '</th></tr>' + items + '</table>' : '') +
-      '<table style="margin-top:18px;background:#17140f;color:#efe8da;"><tr>' +
-        '<td style="padding:14px 18px;">' + e(q.totalLabel) + (q.totalNote ? '<br><span style="font-size:10px;color:#b3a891;">' + e(q.totalNote) + '</span>' : '') + '</td>' +
-        '<td style="padding:14px 18px;text-align:' + end + ';font-size:18px;font-weight:bold;color:#ecd08e;white-space:nowrap;"><span dir="ltr">' + e(q.total) + '</span> ' + e(q.unit) + '</td>' +
+      // The HTML→PDF converter ignores table backgrounds, so the total uses borders and dark text
+      '<table style="margin-top:18px;border-top:3px solid #c9a45c;border-bottom:1px solid #ddd3c1;"><tr>' +
+        '<td style="padding:14px 4px;font-weight:bold;font-size:14px;color:#1d1a14;">' + e(q.totalLabel) + (q.totalNote ? '<br><span style="font-size:10px;font-weight:normal;color:#6d6555;">' + e(q.totalNote) + '</span>' : '') + '</td>' +
+        '<td style="padding:14px 4px;text-align:' + end + ';font-size:20px;font-weight:bold;color:#1d1a14;white-space:nowrap;"><span dir="ltr">' + e(q.total) + '</span> ' + e(q.unit) + '</td>' +
       '</tr></table>' +
       (q.notes ? '<h3>' + e(q.notesLabel) + '</h3><div>' + e(q.notes) + '</div>' : '') +
       '<h3>' + e(q.termsLabel) + '</h3><ol style="color:#6d6555;margin:0;padding-' + start + ':18px;">' +
