@@ -16,7 +16,7 @@ window.ARCOVA = {
   defaultLang: 'ar',
 
   /** رابط Google Apps Script بعد النشر — لو فاضي الطلب بيروح واتساب */
-  sheetWebhookUrl: '',
+  sheetWebhookUrl: 'https://script.google.com/macros/s/AKfycbyuTeNX_uwc11cnWIh6eDgCmCrdhaGxeoytw1Km00KBJikuJYX_SobuyyG8foGpchXO/exec',
 
   tracking: { metaPixelId: '', ga4Id: '', googleAdsId: '', googleAdsLeadLabel: '', tiktokPixelId: '' },
 
